@@ -1,0 +1,69 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import RepositoryCTA from '../components/RepositoryCTA.astro';
+import type { Article } from '../utils/articles';
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+const { data } = article;
+
+const publishedAt = data.publishedAt.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const updatedAt = data.updatedAt?.toISOString() ?? null;
+
+const updatedAtFormatted = data.updatedAt
+  ? data.updatedAt.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : null;
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  ogType="article"
+  publishedTime={data.publishedAt}
+  modifiedTime={data.updatedAt ?? undefined}
+>
+  <article>
+    <header class="article-header">
+      <h1>{data.title}</h1>
+      <p>{data.description}</p>
+      <p class="article-meta">
+        Published <time datetime={data.publishedAt.toISOString()}>{publishedAt}</time>
+        {updatedAt && (
+          <span>
+            {' · '}Updated <time datetime={updatedAt}>{updatedAtFormatted}</time>
+          </span>
+        )}
+        {data.pillar.length > 0 && (
+          <span>
+            {' · '}
+            {data.pillar.map((pillar) => (
+              <span class="pillar">{pillar}</span>
+            ))}
+          </span>
+        )}
+      </p>
+    </header>
+    <slot />
+    <footer>
+      {data.repositoryUrl && <RepositoryCTA url={data.repositoryUrl} />}
+      {data.releaseUrl && (
+        <p><a href={data.releaseUrl} rel="noopener noreferrer">Release for this article</a></p>
+      )}
+      {data.evidenceUrl && (
+        <p><a href={data.evidenceUrl} rel="noopener noreferrer">Evidence report for this article</a></p>
+      )}
+    </footer>
+  </article>
+</BaseLayout>

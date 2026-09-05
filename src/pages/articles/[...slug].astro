@@ -1,0 +1,25 @@
+---
+import { render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { getPublishedArticles, type Article } from '../../utils/articles';
+
+export async function getStaticPaths() {
+  // Drafts are excluded here, so no public page is ever generated for them.
+  const publishedArticles = await getPublishedArticles();
+  return publishedArticles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+---
+
+<ArticleLayout article={article}>
+  <Content />
+</ArticleLayout>

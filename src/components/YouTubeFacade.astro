@@ -1,0 +1,81 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  videoId: string;
+  title: string;
+  poster: ImageMetadata;
+}
+
+const { videoId, title, poster } = Astro.props;
+---
+
+<div class="youtube-facade">
+  <button
+    type="button"
+    class="youtube-facade__trigger"
+    data-video-id={videoId}
+    data-video-title={title}
+  >
+    <Image src={poster} alt="" loading="lazy" decoding="async" />
+    <span class="youtube-facade__play" aria-hidden="true">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M32 8a24 24 0 1 1 0 48 24 24 0 0 1 0-48Zm-6 14.5v19L44 32Z"
+          fill="#ffffff"
+          fill-rule="evenodd"
+        ></path>
+      </svg>
+    </span>
+    <span class="youtube-facade__hint">
+      Selecting play loads this video from YouTube. Until then, no connection to
+      YouTube is made.
+    </span>
+  </button>
+</div>
+
+<script>
+  // Click-to-load: no iframe exists until the user activates the facade.
+  const VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]+$/;
+
+  function activateFacade(button: HTMLButtonElement): void {
+    const videoId = button.dataset.videoId ?? '';
+    const videoTitle = button.dataset.videoTitle ?? 'YouTube video';
+
+    if (!VIDEO_ID_PATTERN.test(videoId)) {
+      return;
+    }
+
+    const container = button.closest('.youtube-facade');
+    if (!container) {
+      return;
+    }
+
+    const embed = document.createElement('div');
+    embed.className = 'youtube-facade__embed';
+
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
+    iframe.title = videoTitle;
+    iframe.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+
+    embed.append(iframe);
+    container.replaceChildren(embed);
+  }
+
+  function initYouTubeFacades(): void {
+    document
+      .querySelectorAll<HTMLButtonElement>('.youtube-facade__trigger')
+      .forEach((button) => {
+        if (button.dataset.youtubeFacadeBound === 'true') {
+          return;
+        }
+        button.dataset.youtubeFacadeBound = 'true';
+        button.addEventListener('click', () => activateFacade(button));
+      });
+  }
+
+  initYouTubeFacades();
+</script>

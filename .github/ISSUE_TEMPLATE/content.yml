@@ -1,0 +1,65 @@
+name: Content draft
+description: Technical intake form for a future article. Preparing this form does not create article content.
+title: "Content draft: <Content-ID>"
+labels: ["content"]
+body:
+  - type: input
+    id: content-id
+    attributes:
+      label: Content-ID
+      description: Identifier in the format SDW-001.
+      placeholder: SDW-001
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: Working title of the planned article.
+    validations:
+      required: true
+  - type: dropdown
+    id: pillar
+    attributes:
+      label: Pillar
+      options:
+        - Generate
+        - Observe
+        - Evaluate
+        - Govern
+    validations:
+      required: true
+  - type: textarea
+    id: thesis
+    attributes:
+      label: Core thesis
+      description: The central claim the article will make.
+    validations:
+      required: true
+  - type: textarea
+    id: technical-proof
+    attributes:
+      label: Technical proof
+      description: How the thesis will be demonstrated (setup, data, measurements).
+    validations:
+      required: true
+  - type: input
+    id: repository-url
+    attributes:
+      label: Repository link
+      description: URL of the repository containing the demonstrated setup (optional at this stage).
+  - type: textarea
+    id: images
+    attributes:
+      label: Images
+      description: Screenshots or diagrams to produce, with one-line descriptions for alt texts.
+  - type: input
+    id: youtube-id
+    attributes:
+      label: Video
+      description: YouTube video ID, if the article embeds a video (optional).
+  - type: textarea
+    id: definition-of-done
+    attributes:
+      label: Definition of Done
+      description: What must be true for this article to be published.

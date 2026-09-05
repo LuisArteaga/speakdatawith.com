@@ -1,0 +1,12 @@
+---
+interface Props {
+  url: string;
+  label?: string;
+}
+
+const { url, label = 'View the code for this article on GitHub' } = Astro.props;
+---
+
+<p class="repository-cta">
+  <a href={url} rel="noopener noreferrer">{label}</a>
+</p>

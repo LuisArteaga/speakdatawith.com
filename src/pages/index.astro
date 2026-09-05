@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPublishedArticles } from '../utils/articles';
+
+const latestArticles = (await getPublishedArticles()).slice(0, 3);
+---
+
+<BaseLayout
+  title="SpeakDataWith"
+  description="Articles on building observable, governable data platforms."
+>
+  <h1>SpeakDataWith</h1>
+  <p>
+    SpeakDataWith publishes articles on data platform engineering. Every claim
+    is demonstrated with a repository you can run yourself.
+  </p>
+  <p><a href="/articles/">Browse all articles</a></p>
+
+  <section aria-labelledby="latest-articles-heading">
+    <h2 id="latest-articles-heading">Latest articles</h2>
+    {
+      latestArticles.length === 0 ? (
+        <p>No articles have been published yet.</p>
+      ) : (
+        <ul class="article-list">
+          {latestArticles.map((article) => (
+            <li>
+              <a href={`/articles/${article.id}/`}>{article.data.title}</a>
+              <p class="article-meta">
+                {article.data.publishedAt.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </p>
+              <p>{article.data.description}</p>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</BaseLayout>
