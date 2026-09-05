@@ -68,4 +68,4 @@ workflow. This applies to:
 
 - `.github/workflows/validate-site.yml`
 - the toolkit workflow references in `.github/workflows/quality-gates.yml`
-  (pinned to the toolkit's immutable release tag `v1.0.2`)
+  (pinned to the toolkit's immutable release tag `v1.0.3`)

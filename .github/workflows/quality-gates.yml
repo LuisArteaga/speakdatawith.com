@@ -1,7 +1,7 @@
 name: Quality Gates
 
 # Supplementary quality gates from the quality-gates-toolkit, pinned to the
-# immutable release tag v1.0.2 (toolkit decision D-0007). The deterministic
+# immutable release tag v1.0.3 (toolkit decision D-0007). The deterministic
 # site validation (validate-site.yml, added by issue #1) is a separate,
 # parallel gate - these toolkit gates complement it, not replace it.
 
@@ -15,7 +15,7 @@ jobs:
     name: secret-scan
     permissions:
       contents: read
-    uses: LuisArteaga/quality-gates-toolkit/.github/workflows/secret-scan.yml@v1.0.2
+    uses: LuisArteaga/quality-gates-toolkit/.github/workflows/secret-scan.yml@v1.0.3
 
   llm-pr-review:
     name: llm-pr-review
@@ -25,7 +25,7 @@ jobs:
     # Fork PRs: repository secrets are unavailable there, so the review job
     # is skipped cleanly instead of failing. secret-scan still runs on forks.
     if: github.event.pull_request.head.repo.full_name == github.repository
-    uses: LuisArteaga/quality-gates-toolkit/.github/workflows/llm-pr-review.yml@v1.0.2
+    uses: LuisArteaga/quality-gates-toolkit/.github/workflows/llm-pr-review.yml@v1.0.3
     with:
       config-path: config/factory.json
       diff-exclude: package-lock.json
