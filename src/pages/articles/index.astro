@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { getPublishedArticles } from '../../utils/articles';
+
+const articles = getPublishedArticles(await getCollection('articles'));
+---
+
+<BaseLayout
+  title="Articles"
+  description="All published articles, newest first."
+>
+  <h1>Articles</h1>
+  {
+    articles.length === 0 ? (
+      <p>No articles have been published yet.</p>
+    ) : (
+      <ul class="article-list">
+        {articles.map((article) => (
+          <li>
+            <a href={`/articles/${article.id}/`}>{article.data.title}</a>
+            <p class="article-meta">
+              {article.data.publishedAt.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+              {article.data.pillar.length > 0 && (
+                <span>
+                  {' · '}
+                  {article.data.pillar.map((pillar) => (
+                    <span class="pillar">{pillar}</span>
+                  ))}
+                </span>
+              )}
+            </p>
+            <p>{article.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>

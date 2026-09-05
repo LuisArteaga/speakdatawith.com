@@ -2,14 +2,14 @@
 
 This repository runs two quality gates from the
 [quality-gates-toolkit](https://github.com/LuisArteaga/quality-gates-toolkit)
-(pinned to release `v1.0.2`), configured in
+(pinned to release `v1.0.3`), configured in
 [`.github/workflows/quality-gates.yml`](../.github/workflows/quality-gates.yml).
 Both jobs run in parallel on every pull request targeting `main`.
 
 | Gate | Toolkit workflow | What it does |
 |---|---|---|
-| `secret-scan` | `secret-scan.yml@v1.0.2` | Language-agnostic secret scanner (pure stdlib) over all tracked files. Runs on every PR, including fork PRs. |
-| `llm-pr-review` | `llm-pr-review.yml@v1.0.2` | Diff-based LLM review by four judges; posts a review containing the versioned `llm-pr-review-verdicts` block (toolkit decision D-0002). |
+| `secret-scan` | `secret-scan.yml@v1.0.3` | Language-agnostic secret scanner (pure stdlib) over all tracked files. Runs on every PR, including fork PRs. |
+| `llm-pr-review` | `llm-pr-review.yml@v1.0.3` | Diff-based LLM review by four judges; posts a review containing the versioned `llm-pr-review-verdicts` block (toolkit decision D-0002). |
 
 The Python-specific toolkit workflows (`pr-checks`, `lint`, `test`,
 `diff-coverage`, `security`) are not wired up: this is an Astro/npm project,
@@ -57,6 +57,6 @@ and runs unchanged alongside these supplementary toolkit gates.
 
 ## Upgrades
 
-Both `uses:` references pin the exact toolkit release tag (`v1.0.2`); there is
+Both `uses:` references pin the exact toolkit release tag (`v1.0.3`); there is
 no floating ref. Upgrades happen as a deliberate commit that bumps both pins
 to the new tag (toolkit decision D-0007).

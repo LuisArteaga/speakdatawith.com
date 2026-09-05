@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://speakdatawith.com/sitemap-index.xml

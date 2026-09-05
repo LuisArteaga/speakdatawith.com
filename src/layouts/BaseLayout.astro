@@ -1,0 +1,72 @@
+---
+import '../styles/global.css';
+import { buildOgMetadata, buildPageTitle, SITE_NAME } from '../utils/og';
+
+interface Props {
+  title: string;
+  description: string;
+  ogType?: 'website' | 'article';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+}
+
+const {
+  title,
+  description,
+  ogType = 'website',
+  publishedTime,
+  modifiedTime,
+} = Astro.props;
+
+const pageTitle = buildPageTitle(title);
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+
+const ogMetadata = buildOgMetadata({
+  pageTitle,
+  description,
+  ogType,
+  canonicalUrl: canonicalUrl.href,
+  publishedTime,
+  modifiedTime,
+});
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl.href} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={SITE_NAME}
+      href={new URL('/rss.xml', Astro.site).href}
+    />
+    {Object.entries(ogMetadata).map(([property, content]) => <meta property={property} content={content} />)}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/articles/">Articles</a></li>
+          <li><a href="/about/">About</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>© 2026 SpeakDataWith. <a href="/articles/">Articles</a> · <a href="/rss.xml">RSS</a></p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,272 @@
+/* SpeakDataWith global stylesheet.
+ *
+ * Plain CSS, mobile-first, no framework, no webfonts, no external CDNs.
+ * Functional, not final.
+ */
+
+:root {
+  color-scheme: light dark;
+  --color-bg: #ffffff;
+  --color-text: #1f2430;
+  --color-muted: #4b5563;
+  --color-border: #d1d5db;
+  --color-accent: #1d4ed8;
+  --color-code-bg: #f3f4f6;
+  --content-width: 70ch;
+  --spacing-1: 0.5rem;
+  --spacing-2: 1rem;
+  --spacing-3: 2rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+/* Visible focus states for keyboard users. */
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--color-bg);
+  color: var(--color-accent);
+  padding: var(--spacing-1) var(--spacing-2);
+  z-index: 10;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+.site-header,
+.site-footer,
+main {
+  width: 100%;
+  max-width: calc(var(--content-width) + 2 * var(--spacing-2));
+  margin-inline: auto;
+  padding-inline: var(--spacing-2);
+}
+
+.site-header {
+  padding-block: var(--spacing-2);
+}
+
+.site-header nav ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin: 0;
+  padding: 0;
+}
+
+.site-footer {
+  margin-block-start: var(--spacing-3);
+  padding-block: var(--spacing-2);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+a {
+  color: var(--color-accent);
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+  overflow-wrap: break-word;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Code blocks: horizontally scrollable instead of breaking the layout. */
+pre {
+  background: var(--color-code-bg);
+  padding: var(--spacing-1);
+  overflow-x: auto;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+code {
+  overflow-wrap: break-word;
+}
+
+pre code {
+  overflow-wrap: normal;
+}
+
+/* Tables: scroll horizontally on narrow screens. Markdown-generated tables
+ * cannot rely on a wrapper element, so the table itself scrolls. */
+table {
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+th,
+td {
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-1);
+  text-align: left;
+}
+
+/* Figures and captions. */
+.figure {
+  margin-inline: 0;
+}
+
+.figure figcaption {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  margin-block-start: var(--spacing-1);
+}
+
+/* Article list. */
+.article-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.article-list li {
+  margin-block-end: var(--spacing-2);
+}
+
+.article-list .article-meta {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.pillar {
+  display: inline-block;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.05rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+/* Article page header. */
+.article-header {
+  margin-block-end: var(--spacing-3);
+}
+
+.article-header .article-meta {
+  color: var(--color-muted);
+}
+
+/* External link box on article pages. */
+.repository-cta {
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: var(--spacing-1) var(--spacing-2);
+}
+
+/* YouTube click-to-load facade. */
+.youtube-facade {
+  margin-block: var(--spacing-2);
+}
+
+.youtube-facade__trigger {
+  display: block;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.youtube-facade__trigger img {
+  display: block;
+}
+
+.youtube-facade__play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.youtube-facade__play svg {
+  width: 64px;
+  height: 64px;
+  filter: drop-shadow(0 1px 4px rgb(0 0 0 / 0.6));
+}
+
+.youtube-facade__hint {
+  display: block;
+  padding: var(--spacing-1) var(--spacing-2);
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.youtube-facade__embed {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.youtube-facade__embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Respect users who prefer reduced motion: no decorative movement. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none;
+    transition: none;
+  }
+}

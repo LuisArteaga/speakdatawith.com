@@ -1,0 +1,45 @@
+name: Validate Site
+
+# Deterministic site validation for the Astro website. Runs on pull requests
+# targeting main and on manual dispatch. This is the gate intended to be
+# configured as the required status check "validate-site" (see
+# docs/github-repository-settings.md).
+#
+# Supply-chain hardening follow-up: the action references below are pinned to
+# major versions only. They should later be pinned to full commit SHAs
+# (see docs/github-repository-settings.md).
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-site:
+    name: validate-site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Check
+        run: npm run check
+
+      - name: Build
+        run: npm run build
