@@ -1,10 +1,11 @@
 import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
+import { getCollection } from 'astro:content';
 import { getPublishedArticles } from '../utils/articles';
 
 export const GET: APIRoute = async (context) => {
   // Drafts are filtered out; the feed contains published articles only.
-  const articles = await getPublishedArticles();
+  const articles = getPublishedArticles(await getCollection('articles'));
 
   return rss({
     title: 'SpeakDataWith',

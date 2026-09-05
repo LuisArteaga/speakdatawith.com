@@ -1,6 +1,6 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { z } from 'astro/zod';
+import { articleSchema } from './schemas/article';
 
 /**
  * Article content collection.
@@ -11,25 +11,14 @@ import { z } from 'astro/zod';
  * images). The entry `id` used in URLs is the slugified file name without
  * extension.
  *
+ * The frontmatter schema lives in `src/schemas/article.ts` (kept free of
+ * virtual modules so it is unit-testable).
+ *
  * See docs/content-schema.md for the full field reference.
  */
 const articles = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/articles' }),
-  schema: z.object({
-    contentId: z.string().regex(/^SDW-\d{3,}$/, 'contentId must match SDW-<digits>, e.g. SDW-001'),
-    title: z.string().min(1),
-    description: z.string().min(1),
-    publishedAt: z.coerce.date(),
-    updatedAt: z.coerce.date().nullable().default(null),
-    draft: z.boolean().default(false),
-    pillar: z.array(z.enum(['Generate', 'Observe', 'Evaluate', 'Govern'])),
-    audience: z.array(z.string()).min(1),
-    tags: z.array(z.string()),
-    repositoryUrl: z.url().nullable().default(null),
-    releaseUrl: z.url().nullable().default(null),
-    evidenceUrl: z.url().nullable().default(null),
-    youtubeId: z.string().nullish().default(null),
-  }),
+  schema: articleSchema,
 });
 
 export const collections = { articles };

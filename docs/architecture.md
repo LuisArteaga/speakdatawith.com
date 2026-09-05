@@ -20,7 +20,8 @@ runtime.
 | Styling | Single global stylesheet | `src/styles/global.css`, no CSS framework |
 | Images | Astro asset pipeline (`astro:assets`) | Local files only, optimized at build time |
 | Video | Click-to-load facade | `src/components/YouTubeFacade.astro`, `youtube-nocookie.com` |
-| Validation | `npm run check` / `npm run build` | GitHub Actions workflow `.github/workflows/validate-site.yml` |
+| Unit tests | Vitest | Pure logic in `src/utils/` and the schema in `src/schemas/article.ts`, tests in `tests/` |
+| Validation | `npm test` / `npm run check` / `npm run build` | GitHub Actions workflow `.github/workflows/validate-site.yml` |
 | Hosting | Cloudflare Pages | See `docs/cloudflare-pages-setup.md` |
 
 ## Deliberate exclusions

@@ -37,6 +37,18 @@ npm run check
 Runs `astro check` (TypeScript strict mode plus Astro diagnostics). CI runs
 the same command on every pull request.
 
+## Test
+
+```bash
+npm test
+```
+
+Runs the Vitest unit tests in `tests/`. They cover the pure logic extracted
+into `src/utils/` (draft filtering and sorting, YouTube video-ID validation,
+title and Open Graph metadata construction) and the article frontmatter
+schema in `src/schemas/article.ts`. CI runs them on every pull request as
+part of the `validate-site` workflow.
+
 ## Production build
 
 ```bash

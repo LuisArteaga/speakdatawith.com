@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 import { getPublishedArticles } from '../../utils/articles';
 
-const articles = await getPublishedArticles();
+const articles = getPublishedArticles(await getCollection('articles'));
 ---
 
 <BaseLayout

@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 import { getPublishedArticles } from '../utils/articles';
 
-const latestArticles = (await getPublishedArticles()).slice(0, 3);
+const latestArticles = getPublishedArticles(await getCollection('articles')).slice(0, 3);
 ---
 
 <BaseLayout

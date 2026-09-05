@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { buildOgMetadata, buildPageTitle, SITE_NAME } from '../utils/og';
 
 interface Props {
   title: string;
@@ -17,25 +18,17 @@ const {
   modifiedTime,
 } = Astro.props;
 
-const siteName = 'SpeakDataWith';
-const pageTitle = title === siteName ? title : `${title} · ${siteName}`;
+const pageTitle = buildPageTitle(title);
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 
-const ogMetadata: Record<string, string> = {
-  'og:title': pageTitle,
-  'og:description': description,
-  'og:type': ogType,
-  'og:url': canonicalUrl.href,
-  'og:site_name': siteName,
-};
-
-if (publishedTime) {
-  ogMetadata['article:published_time'] = publishedTime.toISOString();
-}
-
-if (modifiedTime) {
-  ogMetadata['article:modified_time'] = modifiedTime.toISOString();
-}
+const ogMetadata = buildOgMetadata({
+  pageTitle,
+  description,
+  ogType,
+  canonicalUrl: canonicalUrl.href,
+  publishedTime,
+  modifiedTime,
+});
 ---
 
 <!doctype html>
@@ -50,7 +43,7 @@ if (modifiedTime) {
     <link
       rel="alternate"
       type="application/rss+xml"
-      title={siteName}
+      title={SITE_NAME}
       href={new URL('/rss.xml', Astro.site).href}
     />
     {Object.entries(ogMetadata).map(([property, content]) => <meta property={property} content={content} />)}
