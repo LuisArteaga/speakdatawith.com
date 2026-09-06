@@ -14,10 +14,12 @@ v1 established the tokens and the base components (`BrandOwl`, `Badge`,
 
 `src/styles/tokens.css` is the single source of truth for colors,
 typography, radii, shadows/glow, and motion. It is imported by
-`BaseLayout.astro` before `src/styles/global.css`, which holds only
+`BaseLayout.astro` before `src/styles/global.css`, which holds the
 structural base styles (layout, header/footer, code blocks, reduced-motion
-guard). `global.css` keeps the layout-scale tokens `--content-width`,
-`--content-width-wide`, and `--spacing-1..4`.
+guard) plus the shared content-list styles used by more than one page
+(`.article-list*`, `.article-meta`, `.pillar`). `global.css` keeps the
+layout-scale tokens `--content-width`, `--content-width-wide`, and
+`--spacing-1..4`.
 
 Rules:
 

@@ -2,8 +2,10 @@
  *
  * Plain CSS, mobile-first, no framework, no external CDNs. Design tokens
  * (colors, typography, radii, effects, motion) live in tokens.css; this
- * file keeps only structural base styles. Fonts are self-hosted via
- * @fontsource and imported in BaseLayout.astro.
+ * file keeps the structural base styles plus the shared content-list
+ * styles used by more than one page (.article-list*, .article-meta,
+ * .pillar). Fonts are self-hosted via @fontsource and imported in
+ * BaseLayout.astro.
  */
 
 :root {
