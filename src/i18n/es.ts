@@ -21,6 +21,7 @@ const es: Record<UiKey, string> = {
   homeEmpty: 'Aún no se han publicado artículos.',
   articlesHeading: 'Artículos',
   articlesDescription: 'Todos los artículos publicados, del más reciente al más antiguo.',
+  articlesListHeading: 'Todos los artículos',
   readArticle: 'Leer artículo',
   articlesEmpty: 'Aún no se han publicado artículos.',
   publishedLabel: 'Publicado',

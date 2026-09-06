@@ -41,6 +41,12 @@ interface Props {
    * which are not part of a language cluster, so no switcher renders.
    */
   alternates?: LocalePathSuffix[];
+  /**
+   * Opt-in wide landing layout: renders `<main>` wide enough for the
+   * design-system hero (1150px max-width, see `--content-width-wide`).
+   * Prose pages keep the default content width.
+   */
+  wide?: boolean;
 }
 
 const {
@@ -52,6 +58,7 @@ const {
   lang,
   navItems,
   alternates = [],
+  wide = false,
 } = Astro.props;
 
 const locale = lang ?? 'en';
@@ -124,7 +131,7 @@ const footerRssHref = lang ? `/${lang}/rss.xml` : '/rss.xml';
       </nav>
       {lang && alternates.length > 0 && <LanguageSwitcher links={alternates} currentLocale={lang} />}
     </header>
-    <main id="main">
+    <main id="main" class:list={[{ 'main--wide': wide }]}>
       <slot />
     </main>
     <footer class="site-footer">

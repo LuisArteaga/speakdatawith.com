@@ -1,0 +1,53 @@
+---
+/**
+ * Pure typographic section heading for areas below the hero: optional
+ * monospace eyebrow in the signal color plus an h2 or h3 title. No
+ * background, no border. The optional `id` lets sections bind
+ * `aria-labelledby` to the heading.
+ */
+interface Props {
+  /** Optional uppercase monospace label above the title. */
+  eyebrow?: string;
+  /** Section heading text. */
+  title: string;
+  /** Heading level; only 2 or 3. */
+  level?: 2 | 3;
+  /** DOM id for the rendered heading (aria-labelledby target). */
+  id?: string;
+}
+
+const { eyebrow, title, level = 2, id } = Astro.props;
+const Heading = level === 3 ? 'h3' : 'h2';
+---
+
+<Heading class="section-heading" id={id}>
+  {eyebrow && <span class="section-heading__eyebrow">{eyebrow}</span>}
+  {title}
+</Heading>
+
+<style>
+  .section-heading {
+    margin-block: 0 var(--spacing-2);
+    color: var(--color-text);
+  }
+
+  h2.section-heading {
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+
+  h3.section-heading {
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .section-heading__eyebrow {
+    display: block;
+    margin-block-end: var(--spacing-1);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-signal);
+  }
+</style>

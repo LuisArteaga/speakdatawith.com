@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ContentCard from '../../../components/ContentCard.astro';
+import SectionHeading from '../../../components/SectionHeading.astro';
 import { getCollection } from 'astro:content';
 import { getPublishedArticles } from '../../../utils/articles';
 import { buildIndexAlternates } from '../../../utils/alternates';
@@ -28,34 +30,41 @@ const alternates = buildIndexAlternates(Astro.url.pathname);
   alternates={alternates}
 >
   <h1>{dict.articlesHeading}</h1>
-  {
-    articles.length === 0 ? (
-      <p>{dict.articlesEmpty}</p>
-    ) : (
-      <ul class="article-list">
-        {articles.map((article) => (
-          <li>
-            <a href={`/${locale}/articles/${article.id}/`}>{article.data.title}</a>
-            <p class="article-meta">
-              <time datetime={article.data.publishedAt.toISOString()}>
-                {formatArticleDate(article.data.publishedAt, locale)}
-              </time>
-              {article.data.pillar.length > 0 && (
-                <span>
-                  {' · '}
-                  {article.data.pillar.map((pillar) => (
-                    <span class="pillar">{pillar}</span>
-                  ))}
-                </span>
-              )}
-            </p>
-            <p>{article.data.description}</p>
-            <p class="article-list__read-more">
-              <a href={`/${locale}/articles/${article.id}/`}>{dict.readArticle}</a>
-            </p>
-          </li>
-        ))}
-      </ul>
-    )
-  }
+  <section aria-labelledby="articles-list-heading">
+    <SectionHeading id="articles-list-heading" title={dict.articlesListHeading} />
+    {
+      articles.length === 0 ? (
+        <p>{dict.articlesEmpty}</p>
+      ) : (
+        <ul class="article-list">
+          {articles.map((article) => (
+            <li>
+              <ContentCard>
+                <p class="article-list__title">
+                  <a href={`/${locale}/articles/${article.id}/`}>{article.data.title}</a>
+                </p>
+                <p class="article-meta">
+                  <time datetime={article.data.publishedAt.toISOString()}>
+                    {formatArticleDate(article.data.publishedAt, locale)}
+                  </time>
+                  {article.data.pillar.length > 0 && (
+                    <span>
+                      {' · '}
+                      {article.data.pillar.map((pillar) => (
+                        <span class="pillar">{pillar}</span>
+                      ))}
+                    </span>
+                  )}
+                </p>
+                <p>{article.data.description}</p>
+                <p class="article-list__read-more">
+                  <a href={`/${locale}/articles/${article.id}/`}>{dict.readArticle}</a>
+                </p>
+              </ContentCard>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
 </BaseLayout>
