@@ -64,6 +64,45 @@ describe('getPublishedArticles', () => {
     expect(getPublishedArticles(articles)).toEqual([]);
   });
 
+  it('excludes a non-draft article with publishedAt strictly in the future', () => {
+    const now = new Date('2026-06-15T12:00:00Z');
+    const articles = [
+      makeArticle('already-out', '2026-06-14T00:00:00Z'),
+      makeArticle('future', '2026-06-15T12:00:01Z'),
+    ];
+
+    const result = getPublishedArticles(articles, now);
+
+    expect(result.map((article) => article.id)).toEqual(['already-out']);
+  });
+
+  it('includes an article whose publishedAt equals now', () => {
+    const now = new Date('2026-06-15T12:00:00Z');
+    const articles = [makeArticle('exact', '2026-06-15T12:00:00Z')];
+
+    const result = getPublishedArticles(articles, now);
+
+    expect(result.map((article) => article.id)).toEqual(['exact']);
+  });
+
+  it('excludes a future-dated draft regardless of either rule', () => {
+    const now = new Date('2026-06-15T12:00:00Z');
+    const articles = [makeArticle('future-draft', '2027-01-01T00:00:00Z', true)];
+
+    expect(getPublishedArticles(articles, now)).toEqual([]);
+  });
+
+  it('applies the future-date rule with the default clock', () => {
+    const articles = [
+      makeArticle('long-past', '2000-01-01T00:00:00Z'),
+      makeArticle('far-future', '3000-01-01T00:00:00Z'),
+    ];
+
+    const result = getPublishedArticles(articles);
+
+    expect(result.map((article) => article.id)).toEqual(['long-past']);
+  });
+
   it('does not mutate the input array order', () => {
     const articles = [
       makeArticle('older', '2026-01-01T00:00:00Z'),

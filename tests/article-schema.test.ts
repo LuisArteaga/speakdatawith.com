@@ -6,6 +6,7 @@ const VALID_BASE = {
   title: 'A title',
   description: 'A description',
   publishedAt: '2026-01-01T00:00:00Z',
+  language: 'en',
   pillar: ['Generate'],
   audience: ['data engineers'],
   tags: [],
@@ -76,5 +77,66 @@ describe('articleSchema', () => {
     });
 
     expect(result.success).toBe(false);
+  });
+
+  it('requires the language field', () => {
+    const { language: _omitted, ...withoutLanguage } = VALID_BASE;
+
+    const result = articleSchema.safeParse(withoutLanguage);
+
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts en and de as language values', () => {
+    for (const language of ['en', 'de']) {
+      const result = articleSchema.safeParse({ ...VALID_BASE, language });
+      expect(result.success).toBe(true);
+    }
+  });
+
+  it('rejects a language outside en and de, listing the allowed values', () => {
+    const result = articleSchema.safeParse({ ...VALID_BASE, language: 'fr' });
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    const message = result.error.issues[0]?.message ?? '';
+    expect(message).toContain('en');
+    expect(message).toContain('de');
+  });
+
+  it('accepts updatedAt equal to publishedAt', () => {
+    const result = articleSchema.safeParse({
+      ...VALID_BASE,
+      updatedAt: '2026-01-01T00:00:00Z',
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts updatedAt after publishedAt', () => {
+    const result = articleSchema.safeParse({
+      ...VALID_BASE,
+      updatedAt: '2026-01-02T00:00:00Z',
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts an explicit null updatedAt', () => {
+    const result = articleSchema.safeParse({ ...VALID_BASE, updatedAt: null });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects updatedAt before publishedAt even by one second', () => {
+    const result = articleSchema.safeParse({
+      ...VALID_BASE,
+      publishedAt: '2026-01-02T00:00:00Z',
+      updatedAt: '2026-01-01T23:59:59Z',
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.issues[0]?.path).toContain('updatedAt');
   });
 });

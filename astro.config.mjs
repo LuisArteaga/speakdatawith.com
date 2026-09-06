@@ -7,5 +7,6 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://speakdatawith.com',
   output: 'static',
+  trailingSlash: 'always',
   integrations: [mdx(), sitemap()],
 });

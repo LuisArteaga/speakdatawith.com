@@ -7,6 +7,7 @@ const VALID_BASE = {
   title: 'A title',
   description: 'A description',
   publishedAt: '2026-01-01T00:00:00Z',
+  language: 'en',
   pillar: ['Generate'],
   audience: ['data engineers'],
   tags: [],
