@@ -64,6 +64,14 @@ describe('numeric conventions', () => {
     expect(parseNumberToken('1,25', 'de')).toEqual({ kind: 'value', value: 1.25 });
   });
 
+  it('parses multi-group thousands numbers under the de/es convention as values', () => {
+    expect(parseNumberToken('12.345.678', 'de')).toEqual({ kind: 'value', value: 12345678 });
+    expect(parseNumberToken('12.345.678', 'es')).toEqual({ kind: 'value', value: 12345678 });
+
+    const converted = compareNumbers('12,345,678 rows', '12.345.678 rows', { targetLanguage: 'de' });
+    expect(converted.violations).toEqual([]);
+  });
+
   it('treats version-like tokens as verbatim and unclear tokens as ambiguous', () => {
     expect(parseNumberToken('1.0.2', 'de')).toEqual({ kind: 'version' });
     expect(parseNumberToken('1,23', 'en')).toEqual({ kind: 'ambiguous' });

@@ -34,15 +34,15 @@ export function extractNumberTokens(text) {
 /**
  * Parses one numeric token under a convention (`'en'` or `'de'`/`'es'`).
  * Returns `{ kind: 'value', value }`, `{ kind: 'version' }` (strict string
- * comparison), or `{ kind: 'ambiguous' }`.
+ * comparison), or `{ kind: 'ambiguous' }`. Multi-group thousands numbers
+ * written under the target convention (en `12,345,678` -> de/es
+ * `12.345.678`) parse as values so convention-converted numbers compare
+ * value-equal.
  */
 export function parseNumberToken(token, convention) {
   const dots = (token.match(/\./g) ?? []).length;
   const commas = (token.match(/,/g) ?? []).length;
 
-  if (dots >= 2) {
-    return { kind: 'version' };
-  }
   const decimalSeparator = convention === 'en' ? '.' : ',';
   const thousandsSeparator = convention === 'en' ? ',' : '.';
   const decimalPattern = new RegExp(`^\\d+\\${decimalSeparator}\\d+$`);
@@ -50,6 +50,12 @@ export function parseNumberToken(token, convention) {
   const mixedPattern = new RegExp(
     `^(\\d{1,3}(\\${thousandsSeparator}\\d{3})+|\\d+)\\${decimalSeparator}\\d+$`,
   );
+
+  // Version-like tokens compare verbatim — except multi-group thousands
+  // numbers under the de/es convention, which are values (see above).
+  if (dots >= 2 && !(convention !== 'en' && thousandsPattern.test(token))) {
+    return { kind: 'version' };
+  }
 
   if (dots >= 1 && commas >= 1) {
     if (mixedPattern.test(token)) {
