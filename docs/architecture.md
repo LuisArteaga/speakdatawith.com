@@ -82,6 +82,18 @@ interaction. Before that click, the page contains no iframe and makes no
 request to YouTube. The video ID is validated against a strict character
 allowlist before it is used in a URL.
 
+The facade also renders a plain link to the video's watch page on
+`youtube.com` ("Watch this video on YouTube"), so the video stays reachable
+when JavaScript is disabled. The embed and watch URLs are assembled by pure
+helpers in `src/utils/video.ts` (`buildYouTubeEmbedUrl`, `buildYouTubeWatchUrl`),
+which reject malformed video IDs instead of building a broken URL. The
+post-click iframe is hardened with `loading="lazy"` and
+`referrerpolicy="strict-origin-when-cross-origin"` (attributes defined by
+`buildYouTubeEmbedAttributes`). When a Content Security Policy is introduced,
+the `youtube-nocookie.com` frame host and the player's permission allow-list
+(the `allow` attribute) are the reference points for the frame and
+allow-list directives.
+
 ## Supply chain
 
 - `npm run validate` runs in CI (workflow `validate-site`, stable job name

@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { buildYouTubeWatchUrl } from '../utils/video';
 
 interface Props {
   videoId: string;
@@ -8,6 +9,11 @@ interface Props {
 }
 
 const { videoId, title, poster } = Astro.props;
+
+// Render-time validation: the builder throws for malformed IDs, so a
+// content file with a broken videoId fails the build instead of shipping
+// a dead fallback link.
+const watchUrl = buildYouTubeWatchUrl(videoId);
 ---
 
 <div class="youtube-facade">
@@ -32,11 +38,19 @@ const { videoId, title, poster } = Astro.props;
       YouTube is made.
     </span>
   </button>
+  <a
+    class="youtube-facade__fallback"
+    href={watchUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Watch this video on YouTube
+  </a>
 </div>
 
 <script>
   // Click-to-load: no iframe exists until the user activates the facade.
-  import { isValidYouTubeVideoId } from '../utils/video';
+  import { buildYouTubeEmbedAttributes, isValidYouTubeVideoId } from '../utils/video';
 
   function activateFacade(button: HTMLButtonElement): void {
     const videoId = button.dataset.videoId ?? '';
@@ -55,11 +69,7 @@ const { videoId, title, poster } = Astro.props;
     embed.className = 'youtube-facade__embed';
 
     const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
-    iframe.title = videoTitle;
-    iframe.allow =
-      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-    iframe.allowFullscreen = true;
+    Object.assign(iframe, buildYouTubeEmbedAttributes(videoId, videoTitle));
 
     embed.append(iframe);
     container.replaceChildren(embed);
