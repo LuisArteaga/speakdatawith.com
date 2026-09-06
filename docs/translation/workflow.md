@@ -173,17 +173,17 @@ and records the segment id with a reason in `ambiguousSegments`, which
 passes through to the report. Reviewers find every flagged passage in
 one place. The `ambiguousNumbers` array in reports and validation output
 lists numeric tokens that could not be interpreted under the target
-convention (e.g. an unconverted `1,23` in German text) — they are
-warnings, not invariant failures.
+convention (e.g. an unconverted `0.25` in German text, where the decimal
+separator is `,`) — they are warnings, not invariant failures.
 
 ## Numeric convention rule
 
 Source tokens follow the English convention (`,` thousands, `.`
 decimal); target tokens follow the German/Spanish convention (`.`
 thousands, `,` decimal). Values must be equal (`1,234` ≡ `1.234` ≡
-`1234`). Version-like tokens (two or more dots, e.g. `1.0.2`) and ISO
-dates must be copied verbatim. Tokens that fit neither pattern are
-reported as ambiguous.
+`1234`), including multi-group numbers (`12,345,678` ≡ `12.345.678`).
+Version-like tokens (e.g. `1.0.2`) and ISO dates must be copied
+verbatim. Tokens that fit neither pattern are reported as ambiguous.
 
 ## CLI reference
 
