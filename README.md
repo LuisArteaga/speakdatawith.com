@@ -58,13 +58,17 @@ npm run validate
 ```
 
 The full validation gate, in order: `astro check` (TypeScript and Astro
-diagnostics in strict mode), the production build, and the automated
-`dist/` leak check. `astro check` runs exactly once. CI runs this command
-on every pull request.
+diagnostics in strict mode), the translation integrity check over the
+whole article collection, the production build, and the automated
+`dist/` leak check. CI runs these steps in that order on every pull
+request.
 
 Individual steps for targeted runs:
 
 - `npm run check` — `astro check` only
+- `npm run check:translations` — deterministic integrity check over the
+  article collection (identity contract, staleness, structural
+  invariants; see [`docs/translation/workflow.md`](docs/translation/workflow.md))
 - `npm run build` — production build only (no type check)
 - `npm run check:dist` — `dist/` leak check only
 

@@ -38,7 +38,18 @@ jobs:
       - name: Test
         run: npm test
 
-      # Runs astro check once, astro build, and the dist leak check
-      # (scripts/check-dist.mjs) — the same gate as local `npm run validate`.
+      - name: Check
+        run: npm run check
+
+      # Deterministic integrity check over the whole article collection
+      # (identity contract, derived staleness, structural invariants).
+      # Reads repository files only — no model calls, no external APIs,
+      # no secrets.
+      - name: Check translations
+        run: npm run check:translations
+
+      # astro check ran separately above; this runs the production build
+      # and the dist leak check (scripts/check-dist.mjs). `npm run validate`
+      # remains the local meta-script with the same gates.
       - name: Validate
-        run: npm run validate
+        run: npm run build && npm run check:dist
