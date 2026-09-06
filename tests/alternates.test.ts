@@ -5,6 +5,7 @@ import {
   buildIndexAlternates,
   type LocalePathSuffix,
 } from '../src/utils/alternates';
+import { groupPublishedByTranslationKey } from '../src/utils/articles';
 import type { Article } from '../src/utils/articles';
 
 function makeArticle(id: string, language: 'en' | 'de' | 'es', translationKey = 'SDW-001'): Article {
@@ -85,5 +86,77 @@ describe('buildArticleAlternates', () => {
 
     expect(localesOf(links)).toEqual(['en']);
     expect(links[0]?.pathSuffix).toBe('articles/a-green-dbt-check-is-not-proof/');
+  });
+});
+
+describe('hreflang clusters against the publication logic', () => {
+  const NOW = new Date('2026-09-15T00:00:00Z');
+
+  function versionOf(language: 'en' | 'de' | 'es', overrides: Partial<Article['data']> = {}): Article {
+    const article = makeArticle(`version-${language}`, language);
+    Object.assign(article.data, overrides);
+    return article;
+  }
+
+  function alternatesFor(articles: Article[]): string[] {
+    const groups = groupPublishedByTranslationKey(articles, NOW);
+    const group = groups.get('SDW-001') ?? {};
+    const current = group.en ?? group.de ?? group.es;
+    if (!current) {
+      throw new Error('the fixture collection has no published version to render');
+    }
+    return localesOf(buildArticleAlternates(current, group));
+  }
+
+  it('links only published languages: a generated translation stays out', () => {
+    const articles = [
+      versionOf('en', { publishedAt: new Date('2026-01-01T00:00:00Z') }),
+      versionOf('de', { translationStatus: 'generated' }),
+    ];
+
+    expect(alternatesFor(articles)).toEqual(['en']);
+  });
+
+  it('links only published languages: a stored-stale translation stays out', () => {
+    const articles = [
+      versionOf('en', { publishedAt: new Date('2026-01-01T00:00:00Z') }),
+      versionOf('de', { translationStatus: 'stale' }),
+    ];
+
+    expect(alternatesFor(articles)).toEqual(['en']);
+  });
+
+  it('links only published languages: a derived-stale translation stays out', () => {
+    const articles = [
+      versionOf('en', { publishedAt: new Date('2026-01-01T00:00:00Z'), sourceRevision: 2 }),
+      versionOf('de', { sourceRevision: 1 }),
+    ];
+
+    expect(alternatesFor(articles)).toEqual(['en']);
+  });
+
+  it('links only published languages: a future-dated translation stays out', () => {
+    const articles = [
+      versionOf('en', { publishedAt: new Date('2026-01-01T00:00:00Z') }),
+      versionOf('de', { publishedAt: new Date('2026-10-01T00:00:00Z') }),
+    ];
+
+    expect(alternatesFor(articles)).toEqual(['en']);
+  });
+
+  it('links the reviewed, revision-aligned translation next to its published source', () => {
+    const articles = [
+      versionOf('en', { publishedAt: new Date('2026-01-01T00:00:00Z') }),
+      versionOf('de', { publishedAt: new Date('2026-01-01T00:00:00Z') }),
+    ];
+
+    expect(alternatesFor(articles)).toEqual(['en', 'de']);
+  });
+
+  it('produces no cluster at all when no version is published', () => {
+    const articles = [versionOf('en', { draft: true }), versionOf('de')];
+
+    const groups = groupPublishedByTranslationKey(articles, NOW);
+    expect(groups.has('SDW-001')).toBe(false);
   });
 });

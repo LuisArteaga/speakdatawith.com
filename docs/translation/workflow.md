@@ -23,6 +23,7 @@ scripts/translation/
 ├── extract.mjs            source article → segments JSON
 ├── apply.mjs              translated segments → target document + report
 ├── validate.mjs           source + translation → invariant check
+├── check-collection.mjs   whole collection → CI integrity gate
 └── lib/
     ├── markdown.mjs       MDX-aware remark pipeline, extraction, grafting
     ├── invariants.mjs     structural + numeric invariant comparison
@@ -155,6 +156,78 @@ report; only then does the publication filter
 approval. Re-translation after a source revision resets the status to
 `generated` and review starts from zero.
 
+Review is per target language: approving the German version never
+approves the Spanish one — each translation carries its own
+`translationStatus` and is reviewed separately.
+
+## Collection integrity check (CI)
+
+`npm run check:translations`
+(`scripts/translation/check-collection.mjs`) validates the complete
+article collection deterministically and runs in CI inside
+`validate-site`. It reuses the workflow libraries above (parsing,
+identity contract, invariants) and adds collection-level rules. It reads
+repository files only: no model calls, no external APIs, no secrets.
+
+CI fails (errors) when:
+
+- the `(translationKey, language)` combination appears twice,
+- a translation has no English source for its `translationKey`,
+- `translationOf` does not reference the source's `contentId`,
+- the identity contract between source and translation is violated
+  (different `translationKey`, wrong `contentId` derivation, invalid
+  `translationStatus`, empty title/description),
+- a translation's `sourceRevision` differs from its source's — stored
+  stale and derived stale alike. The report names the source article,
+  the translation article, both languages, and the expected and found
+  revision,
+- `repositoryUrl`, `releaseUrl`, or `evidenceUrl` differ from the
+  English source (technical references must survive translation),
+- a `generated` or `stale` translation is publishable by date
+  (`draft: false`, `publishedAt` not in the future) — the production
+  build already keeps such translations out of every public route, feed,
+  sitemap entry, and hreflang cluster via `getPublishedArticles()`; the
+  CI error makes the forgotten status visible instead of silently
+  hiding the article,
+- per-file frontmatter rules are violated. They mirror the zod schema
+  (`src/schemas/article.ts`) rule by rule; a Vitest parity test runs the
+  same fixture frontmatters through both validators so the rules cannot
+  drift apart,
+- protected content changed between a source and its translation: code
+  blocks, inline code values, URLs, component instances, and numeric
+  values (the structural invariants from `validate.mjs`, applied to the
+  collection).
+
+CI warns (never fails) when:
+
+- a publishable English source has no German or Spanish translation —
+  missing translations never block an English article (quality over
+  coverage),
+- an optional Figure `alt` text is identical to the source (probably
+  untranslated),
+- numeric tokens are ambiguous under the target convention (see the
+  numeric convention rule below),
+- a protected glossary term occurs a different number of times in the
+  translation than in the source — a deterministic proxy for terminology
+  drift that only asks a human to look.
+
+### Review workflow around CI
+
+```text
+English source updated
+→ sourceRevision incremented
+→ translation check reports DE and ES as stale
+→ translation workflow updates translations
+→ generated translations reviewed by a human
+→ translationStatus changed to reviewed
+→ sourceRevision aligned
+→ CI passes
+→ merge
+```
+
+Each language moves through this loop independently; the check reports
+every language version separately.
+
 ## Updating an existing translation
 
 1. Bump `sourceRevision` in the English source (and update its content).
@@ -208,6 +281,9 @@ npm run translate:apply -- \
 npm run translate:validate -- \
   --source src/content/articles/en/my-post.md \
   --translation src/content/articles/de/mein-beitrag.md
+
+# 5. Check the whole collection (the CI gate)
+npm run check:translations
 ```
 
 No model credentials are needed: the scripts never call an LLM, and no
@@ -228,8 +304,13 @@ plugs into the same segments contract).
   (e.g. `videoId` inside a paragraph) are covered by the skill's
   prohibitions and human review, not by the URL invariant.
 - Semantic glossary compliance (does the text USE the mandated term) is
-  a skill instruction, not a deterministic check; CI integrity checks
-  arrive with issue #16.
+  a skill instruction, not a deterministic check. The collection check
+  adds one deterministic proxy — protected-term occurrence drift — but
+  recognizing a NEW term that should enter the glossary stays a human
+  task.
+- Semantic translation quality, style-guide adherence, and prose
+  correctness are human review gates; CI enforces only the structural
+  and metadata contract described above.
 - The wrapper `translate:prepare` from the issue sketch was not built —
   the skill orchestrates the three scripts, and a wrapper that can call
   a model would contradict the "no implicit model calls" rule.

@@ -118,8 +118,11 @@ can also become stale **by derivation**: it is `reviewed` but its
 `sourceRevision` no longer matches the source article's current
 `sourceRevision` (`src/utils/articles.ts::isDerivedStale()`). Both kinds
 are excluded from publication; the derived form resolves automatically
-once `sourceRevision` is bumped after re-translation. CI enforcement of
-the derived-stale state is planned in a follow-up issue.
+once `sourceRevision` is bumped after re-translation. CI fails on both
+kinds plus on publishable `generated`/`stale` states —
+`npm run check:translations` in the `validate-site` workflow (see
+[`docs/translation/workflow.md`](translation/workflow.md) for the full
+error and warning list).
 
 An article version is published only when **all** of the following hold
 (the single publication filter is
