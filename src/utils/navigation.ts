@@ -1,13 +1,11 @@
-export interface NavItem {
-  label: string;
-  href: string;
-  /** True when `href` exactly equals the current pathname. */
-  isCurrent: boolean;
-}
-
 export interface NavLink {
   label: string;
   href: string;
+}
+
+export interface NavItem extends NavLink {
+  /** True when `href` exactly equals the current pathname. */
+  isCurrent: boolean;
 }
 
 export const NAV_ITEMS: ReadonlyArray<NavLink> = [
@@ -30,13 +28,23 @@ export function buildNavItems(currentPathname: string): NavItem[] {
 }
 
 /**
- * Paths of the placeholder pages that carry `<meta name="robots"
- * content="noindex">` and must therefore also stay out of the sitemap (the
- * `filter` option of `@astrojs/sitemap` in `astro.config.mjs` consumes
- * `isNoindexPageUrl`). When a placeholder is replaced with real content,
- * remove its `noindex` prop and delete its entry here.
+ * The single source of truth for the placeholder pages that search engines
+ * must not index: `BaseLayout` renders `<meta name="robots"
+ * content="noindex">` for exactly these pathnames (`isNoindexPagePath`),
+ * and the `filter` option of `@astrojs/sitemap` in `astro.config.mjs` keeps
+ * the same pages out of the sitemap (`isNoindexPageUrl`). When a
+ * placeholder is replaced with real content, delete its entry here —
+ * indexing and sitemap inclusion come back with that one change.
  */
 export const NOINDEX_PAGE_PATHS: ReadonlyArray<string> = ['/impressum/', '/datenschutz/'];
+
+/**
+ * True when the site pathname is one of the noindex placeholder pages.
+ * `pathname` is the site-internal pathname (e.g. `Astro.url.pathname`).
+ */
+export function isNoindexPagePath(pathname: string): boolean {
+  return NOINDEX_PAGE_PATHS.includes(pathname);
+}
 
 /**
  * True when the full URL's pathname is one of the noindex placeholder
@@ -44,5 +52,5 @@ export const NOINDEX_PAGE_PATHS: ReadonlyArray<string> = ['/impressum/', '/daten
  * passes to its `filter`).
  */
 export function isNoindexPageUrl(url: string): boolean {
-  return NOINDEX_PAGE_PATHS.includes(new URL(url).pathname);
+  return isNoindexPagePath(new URL(url).pathname);
 }

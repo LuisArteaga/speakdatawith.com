@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { buildNavItems, isNoindexPageUrl, NAV_ITEMS, NOINDEX_PAGE_PATHS } from '../src/utils/navigation';
+import {
+  buildNavItems,
+  isNoindexPagePath,
+  isNoindexPageUrl,
+  NAV_ITEMS,
+  NOINDEX_PAGE_PATHS,
+} from '../src/utils/navigation';
 
 describe('buildNavItems', () => {
   it('returns the three nav items with label and href', () => {
@@ -44,6 +50,25 @@ describe('buildNavItems', () => {
 
   it('exposes the nav items read-only from NAV_ITEMS', () => {
     expect(NAV_ITEMS.map((item) => item.href)).toEqual(['/', '/articles/', '/about/']);
+  });
+});
+
+describe('isNoindexPagePath', () => {
+  it('is true for the impressum and datenschutz placeholder pathnames', () => {
+    expect(isNoindexPagePath('/impressum/')).toBe(true);
+    expect(isNoindexPagePath('/datenschutz/')).toBe(true);
+  });
+
+  it('is false for regular pages and status pages', () => {
+    expect(isNoindexPagePath('/')).toBe(false);
+    expect(isNoindexPagePath('/about/')).toBe(false);
+    expect(isNoindexPagePath('/articles/')).toBe(false);
+    expect(isNoindexPagePath('/404.html')).toBe(false);
+  });
+
+  it('requires the exact registry path (no prefix or slash-less match)', () => {
+    expect(isNoindexPagePath('/impressum')).toBe(false);
+    expect(isNoindexPagePath('/impressum/extra/')).toBe(false);
   });
 });
 

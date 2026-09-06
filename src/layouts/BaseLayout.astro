@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import { buildOgMetadata, buildPageTitle, SITE_NAME } from '../utils/og';
-import { buildNavItems } from '../utils/navigation';
+import { buildNavItems, isNoindexPagePath } from '../utils/navigation';
 
 interface Props {
   title: string;
@@ -9,8 +9,6 @@ interface Props {
   ogType?: 'website' | 'article';
   publishedTime?: Date;
   modifiedTime?: Date;
-  /** Render `<meta name="robots" content="noindex">` (placeholder pages). */
-  noindex?: boolean;
 }
 
 const {
@@ -19,7 +17,6 @@ const {
   ogType = 'website',
   publishedTime,
   modifiedTime,
-  noindex = false,
 } = Astro.props;
 
 const pageTitle = buildPageTitle(title);
@@ -35,6 +32,7 @@ const ogMetadata = buildOgMetadata({
 });
 
 const navItems = buildNavItems(Astro.url.pathname);
+const noindex = isNoindexPagePath(Astro.url.pathname);
 ---
 
 <!doctype html>
