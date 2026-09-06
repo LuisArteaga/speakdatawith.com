@@ -90,6 +90,20 @@ npm run preview
 
 Serves `dist/` locally so you can check the built site, not the dev server.
 
+## Translate an article
+
+```bash
+npm run translate:extract   # English source → segments JSON
+npm run translate:apply     # translated segments → target document + report
+npm run translate:validate  # invariant check for a source/translation pair
+```
+
+The LLM translation step is governed by the versioned skill
+`.claude/skills/translate-article/SKILL.md`; the full contract is
+documented in [`docs/translation/workflow.md`](translation/workflow.md).
+The scripts are deterministic, need no model credentials, and never
+publish anything.
+
 ## Troubleshooting
 
 - **`/` returns a 404 in dev and preview**: `astro dev` and `astro

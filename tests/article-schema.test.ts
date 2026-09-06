@@ -248,4 +248,42 @@ describe('articleSchema', () => {
     if (result.success) return;
     expect(result.error.issues[0]?.path).toContain('updatedAt');
   });
+
+  it('defaults the translation provenance fields to null', () => {
+    const result = articleSchema.parse(VALID_BASE);
+
+    expect(result.translationModel).toBeNull();
+    expect(result.translationPromptVersion).toBeNull();
+    expect(result.translatedAt).toBeNull();
+  });
+
+  it('accepts a generated German translation with full provenance', () => {
+    const result = articleSchema.safeParse({
+      ...VALID_TRANSLATION,
+      translationStatus: 'generated',
+      translationModel: 'acme/model-1',
+      translationPromptVersion: '1.0',
+      translatedAt: '2026-09-20',
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects an empty translationModel string', () => {
+    const result = articleSchema.safeParse({
+      ...VALID_TRANSLATION,
+      translationModel: '',
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects an unparsable translatedAt date', () => {
+    const result = articleSchema.safeParse({
+      ...VALID_TRANSLATION,
+      translatedAt: 'not-a-date',
+    });
+
+    expect(result.success).toBe(false);
+  });
 });

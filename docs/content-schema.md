@@ -57,7 +57,12 @@ A German translation of the same article uses
 `contentId: "SDW-001-DE"`, `translationKey: "SDW-001"`,
 `language: "de"`, `translationOf: "SDW-001-EN"`,
 `translationStatus: "reviewed"` (after review), and the
-`sourceRevision` of the source it was translated from.
+`sourceRevision` of the source it was translated from. A freshly
+generated translation additionally carries
+`translationModel`, `translationPromptVersion`, and `translatedAt`
+(see the translation workflow documentation); a human keeps or updates
+`translationModel`/`translatedAt` when promoting the status to
+`reviewed`.
 
 ### Article identity and translation fields
 
@@ -69,6 +74,9 @@ A German translation of the same article uses
 | `translationOf` | string \| null | yes | `contentId` of the English source version; `null` for English originals. Must name the English article with the same `translationKey`. |
 | `translationStatus` | string | yes | One of `source`, `generated`, `reviewed`, `stale` (see below). |
 | `sourceRevision` | number | yes | Positive integer. The version counter of the source article this version was translated from; bump it on the source when it is revised so derived staleness can be detected. |
+| `translationModel` | string \| null | no | Provider/model identifier that produced a machine translation (e.g. `acme/model-1`); `null` for English sources and human-written versions. Set by the translation workflow (`docs/translation/workflow.md`). |
+| `translationPromptVersion` | string \| null | no | Version of the translation skill (`SKILL.md`) used to generate the translation; `null` when not machine-generated. |
+| `translatedAt` | date \| null | no | Date the machine translation was produced; `null` when not machine-generated. |
 
 ### Content fields
 
