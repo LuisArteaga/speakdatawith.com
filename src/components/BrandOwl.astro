@@ -1,0 +1,158 @@
+---
+/**
+ * Canonical brand asset: wireframe owl rendered as inline SVG.
+ *
+ * The SVG geometry (points, paths, coordinates) is canonical and must not
+ * be edited; colors are mapped to the design tokens in src/styles/tokens.css
+ * via the scoped stylesheet below. Hover interactions activate only inside
+ * a container with the class `owl-interactive`.
+ */
+interface Props {
+  /** Square render size in pixels (viewBox stays 0 0 200 200). */
+  size?: number;
+  /**
+   * Decorative by default (aria-hidden). Set to false for meaningful
+   * images; then role="img" applies and `title` names the graphic.
+   */
+  decorative?: boolean;
+  /** Accessible name used when decorative is false. */
+  title?: string;
+}
+
+const { size = 200, decorative = true, title = 'SpeakDataWith owl logo' } = Astro.props;
+---
+
+<svg
+  class="owl-svg"
+  viewBox="0 0 200 200"
+  width={size}
+  height={size}
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden={decorative ? 'true' : undefined}
+  role={decorative ? undefined : 'img'}
+>
+  {!decorative && <title>{title}</title>}
+  <!-- Outer Body Shell -->
+  <polygon class="owl-mesh-line" points="100,15 35,55 55,165 100,185 145,165 165,55" stroke-width="1.2" fill="rgba(139, 92, 246, 0.02)" />
+
+  <!-- Head Mesh -->
+  <polygon class="owl-accent-line" points="100,15 65,45 100,70 135,45" stroke-width="1.5" fill="rgba(217, 70, 239, 0.06)" />
+  <polyline class="owl-mesh-line" points="35,55 65,45 100,105 135,45 165,55" stroke-width="1.2" />
+
+  <!-- Body & Wing Lines -->
+  <line class="owl-mesh-line" x1="100" y1="15" x2="100" y2="185" stroke-dasharray="2 3" stroke-width="1" />
+  <polyline class="owl-mesh-line" points="35,55 65,120 100,185 135,120 165,55" stroke-width="1" />
+  <polyline class="owl-accent-line" points="55,165 100,125 145,165" stroke-width="1.2" />
+
+  <!-- Inner Grid Lines -->
+  <line class="owl-accent-line" x1="65" y1="45" x2="65" y2="120" stroke-width="0.8" />
+  <line class="owl-accent-line" x1="135" y1="45" x2="135" y2="120" stroke-width="0.8" />
+  <line class="owl-mesh-line" x1="35" y1="55" x2="100" y2="125" stroke-width="0.8" />
+  <line class="owl-mesh-line" x1="165" y1="55" x2="100" y2="125" stroke-width="0.8" />
+
+  <!-- Eyes -->
+  <g>
+    <circle class="owl-eye-outer" cx="72" cy="70" r="12" stroke-width="1.5" />
+    <circle class="owl-eye-pupil" cx="72" cy="70" r="5" />
+    <circle cx="72" cy="70" r="1.5" fill="#ffffff" />
+    <circle class="owl-eye-outer" cx="128" cy="70" r="12" stroke-width="1.5" />
+    <circle class="owl-eye-pupil" cx="128" cy="70" r="5" />
+    <circle cx="128" cy="70" r="1.5" fill="#ffffff" />
+  </g>
+
+  <!-- Beak -->
+  <polygon class="owl-beak" points="100,80 92,96 108,96" />
+
+  <!-- Nodes -->
+  <circle class="owl-node" cx="100" cy="15" r="2.5" />
+  <circle class="owl-node" cx="35" cy="55" r="2.5" />
+  <circle class="owl-node" cx="165" cy="55" r="2.5" />
+  <circle class="owl-node" cx="100" cy="185" r="2.5" />
+  <circle class="owl-node" cx="65" cy="120" r="2" />
+  <circle class="owl-node" cx="135" cy="120" r="2" />
+  <circle class="owl-node" cx="100" cy="125" r="2" />
+</svg>
+
+<style>
+  .owl-svg {
+    display: block;
+  }
+
+  /* Token mapping (see the class table in docs/design-system.md). */
+  .owl-mesh-line {
+    stroke: var(--color-primary);
+    opacity: 0.85;
+    transition:
+      stroke var(--transition-fast),
+      opacity var(--transition-fast);
+  }
+
+  .owl-accent-line {
+    stroke: var(--color-accent);
+    transition: stroke var(--transition-fast);
+  }
+
+  .owl-node {
+    fill: var(--color-primary);
+    transition:
+      fill var(--transition-fast),
+      filter var(--transition-fast);
+  }
+
+  .owl-eye-outer {
+    stroke: var(--color-accent);
+    fill: var(--color-surface);
+    transition:
+      stroke var(--transition-fast),
+      fill var(--transition-fast),
+      filter var(--transition-fast);
+  }
+
+  .owl-eye-pupil {
+    fill: var(--color-signal);
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform var(--transition-fast);
+  }
+
+  .owl-beak {
+    fill: var(--color-accent);
+  }
+
+  /* Hover interactions activate only inside .owl-interactive containers.
+   * The container class lives on an ancestor outside this component, so
+   * it is addressed via :global(). */
+  :global(.owl-interactive:hover) .owl-mesh-line {
+    stroke: var(--color-primary-light);
+    opacity: 1;
+  }
+
+  :global(.owl-interactive:hover) .owl-node {
+    fill: var(--color-signal);
+    filter: drop-shadow(0 0 4px var(--color-signal));
+  }
+
+  :global(.owl-interactive:hover) .owl-eye-outer {
+    stroke: var(--color-signal);
+    filter: drop-shadow(0 0 4px var(--color-signal));
+  }
+
+  :global(.owl-interactive:hover) .owl-eye-pupil {
+    transform: scale(1.3);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .owl-mesh-line,
+    .owl-accent-line,
+    .owl-node,
+    .owl-eye-outer,
+    .owl-eye-pupil {
+      transition: none;
+    }
+
+    :global(.owl-interactive:hover) .owl-eye-pupil {
+      transform: none;
+    }
+  }
+</style>

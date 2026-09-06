@@ -1,5 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import BrandOwl from '../../components/BrandOwl.astro';
+import Badge from '../../components/Badge.astro';
+import Button from '../../components/Button.astro';
+import ContentCard from '../../components/ContentCard.astro';
 import { getCollection } from 'astro:content';
 import { getPublishedArticles } from '../../utils/articles';
 import { buildIndexAlternates } from '../../utils/alternates';
@@ -31,9 +35,18 @@ const alternates = buildIndexAlternates(Astro.url.pathname);
   navItems={navItems}
   alternates={alternates}
 >
-  <h1>SpeakDataWith</h1>
-  <p>{dict.homeIntro}</p>
-  <p><a href={`/${locale}/articles/`}>{dict.homeBrowseAll}</a></p>
+  <section class="intro">
+    <div class="intro__copy">
+      <h1>SpeakDataWith</h1>
+      <p>{dict.homeIntro}</p>
+      <Button href={`/${locale}/articles/`}>{dict.homeBrowseAll}</Button>
+    </div>
+    <div class="intro__owl owl-interactive">
+      <ContentCard>
+        <BrandOwl size={180} />
+      </ContentCard>
+    </div>
+  </section>
 
   <section aria-labelledby="latest-articles-heading">
     <h2 id="latest-articles-heading">{dict.homeLatest}</h2>
@@ -44,16 +57,16 @@ const alternates = buildIndexAlternates(Astro.url.pathname);
         <ul class="article-list">
           {latestArticles.map((article) => (
             <li>
-              <a href={`/${locale}/articles/${article.id}/`}>{article.data.title}</a>
-              <p class="article-meta">
-                <time datetime={article.data.publishedAt.toISOString()}>
-                  {formatArticleDate(article.data.publishedAt, locale)}
-                </time>
-              </p>
-              <p>{article.data.description}</p>
-              <p class="article-list__read-more">
-                <a href={`/${locale}/articles/${article.id}/`}>{dict.readArticle}</a>
-              </p>
+              <ContentCard>
+                <p class="article-list__title">
+                  <a href={`/${locale}/articles/${article.id}/`}>{article.data.title}</a>
+                </p>
+                <Badge>{formatArticleDate(article.data.publishedAt, locale)}</Badge>
+                <p>{article.data.description}</p>
+                <p class="article-list__read-more">
+                  <a href={`/${locale}/articles/${article.id}/`}>{dict.readArticle}</a>
+                </p>
+              </ContentCard>
             </li>
           ))}
         </ul>
@@ -61,3 +74,52 @@ const alternates = buildIndexAlternates(Astro.url.pathname);
     }
   </section>
 </BaseLayout>
+
+<style>
+  .intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-3);
+    margin-block-end: var(--spacing-3);
+  }
+
+  .intro__copy {
+    flex: 1 1 20rem;
+  }
+
+  .intro__copy h1 {
+    margin-block: 0 var(--spacing-1);
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    letter-spacing: -0.02em;
+  }
+
+  .intro__copy p {
+    margin-block: 0 var(--spacing-2);
+  }
+
+  .intro__owl {
+    flex: 0 1 auto;
+  }
+
+  .article-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .article-list li {
+    margin-block-end: var(--spacing-2);
+  }
+
+  .article-list__title {
+    margin-block: 0 var(--spacing-1);
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .article-list__read-more {
+    margin-block: var(--spacing-1) 0;
+    font-size: 0.9rem;
+  }
+</style>

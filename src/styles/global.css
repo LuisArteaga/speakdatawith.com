@@ -1,17 +1,13 @@
 /* SpeakDataWith global stylesheet.
  *
- * Plain CSS, mobile-first, no framework, no webfonts, no external CDNs.
- * Functional, not final.
+ * Plain CSS, mobile-first, no framework, no external CDNs. Design tokens
+ * (colors, typography, radii, effects, motion) live in tokens.css; this
+ * file keeps only structural base styles. Fonts are self-hosted via
+ * @fontsource and imported in BaseLayout.astro.
  */
 
 :root {
-  color-scheme: light dark;
-  --color-bg: #ffffff;
-  --color-text: #1f2430;
-  --color-muted: #4b5563;
-  --color-border: #d1d5db;
-  --color-accent: #1d4ed8;
-  --color-code-bg: #f3f4f6;
+  color-scheme: dark;
   --content-width: 70ch;
   --spacing-1: 0.5rem;
   --spacing-2: 1rem;
@@ -30,14 +26,7 @@ html {
 
 body {
   margin: 0;
-  font-family:
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.6;
   color: var(--color-text);
   background-color: var(--color-bg);
@@ -89,7 +78,7 @@ main {
   margin-block-start: var(--spacing-3);
   padding-block: var(--spacing-2);
   border-top: 1px solid var(--color-border);
-  color: var(--color-muted);
+  color: var(--color-text-muted);
   font-size: 0.9rem;
 }
 
@@ -114,9 +103,15 @@ video {
   height: auto;
 }
 
+code,
+pre,
+kbd {
+  font-family: var(--font-mono);
+}
+
 /* Code blocks: horizontally scrollable instead of breaking the layout. */
 pre {
-  background: var(--color-code-bg);
+  background: var(--color-surface-elevated);
   padding: var(--spacing-1);
   overflow-x: auto;
   border-radius: 4px;
@@ -153,25 +148,9 @@ td {
 }
 
 .figure figcaption {
-  color: var(--color-muted);
+  color: var(--color-text-muted);
   font-size: 0.9rem;
   margin-block-start: var(--spacing-1);
-}
-
-/* Article list. */
-.article-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.article-list li {
-  margin-block-end: var(--spacing-2);
-}
-
-.article-list .article-meta {
-  color: var(--color-muted);
-  font-size: 0.9rem;
 }
 
 /* Language switcher (rendered only on /<lang>/ pages). */
@@ -204,7 +183,7 @@ td {
 }
 
 .article-header .article-meta {
-  color: var(--color-muted);
+  color: var(--color-text-muted);
 }
 
 /* External link box on article pages. */
@@ -255,13 +234,14 @@ td {
 .youtube-facade__play svg {
   width: 64px;
   height: 64px;
+  color: var(--color-text);
   filter: drop-shadow(0 1px 4px rgb(0 0 0 / 0.6));
 }
 
 .youtube-facade__hint {
   display: block;
   padding: var(--spacing-1) var(--spacing-2);
-  color: var(--color-muted);
+  color: var(--color-text-muted);
   font-size: 0.85rem;
   text-align: left;
 }
