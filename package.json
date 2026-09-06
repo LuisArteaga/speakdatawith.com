@@ -12,7 +12,7 @@
     "check:translations": "node scripts/translation/check-collection.mjs",
     "test": "vitest run",
     "build": "astro build",
-    "validate": "npm run check && npm run build && npm run check:dist",
+    "validate": "npm run check && npm run check:translations && npm run build && npm run check:dist",
     "preview": "astro preview",
     "translate:extract": "node scripts/translation/extract.mjs",
     "translate:apply": "node scripts/translation/apply.mjs",
