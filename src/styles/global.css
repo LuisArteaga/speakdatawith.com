@@ -250,6 +250,14 @@ td {
   text-align: left;
 }
 
+/* No-JS fallback link: always visible, native link semantics keep it
+ * keyboard-operable. */
+.youtube-facade__fallback {
+  display: inline-block;
+  margin-top: var(--spacing-1);
+  font-size: 0.85rem;
+}
+
 .youtube-facade__embed {
   position: relative;
   aspect-ratio: 16 / 9;
