@@ -38,7 +38,9 @@ describe('Hero', () => {
     });
     expect(html).not.toContain('<a ');
     expect(html).not.toContain('<button');
-    expect(html).not.toContain('<p>');
+    // Attribute-tolerant paragraph count: the default visual's caption is
+    // the only <p>, so an (empty) description paragraph would make it two.
+    expect((html.match(/<p[\s>]/g) ?? []).length).toBe(1);
   });
 
   it('renders exclusively the visual slot content when provided', async () => {
