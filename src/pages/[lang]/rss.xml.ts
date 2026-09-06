@@ -2,14 +2,17 @@ import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { getPublishedArticles } from '../../utils/articles';
-import { getUiDictionary } from '../../i18n/config';
+import { LOCALES, getUiDictionary, type Locale } from '../../i18n/config';
 
-const locale = 'es' as const;
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { lang: locale } }));
+}
 
 export const GET: APIRoute = async (context) => {
   // The central publication filter decides membership: drafts, unreviewed
   // translations, stale translations (stored or derived), and future-dated
   // articles never reach the feed.
+  const locale = context.params.lang as Locale;
   const articles = getPublishedArticles(await getCollection('articles'), locale);
   const dict = getUiDictionary(locale);
 

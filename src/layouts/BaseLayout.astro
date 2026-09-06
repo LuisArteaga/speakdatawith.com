@@ -27,18 +27,12 @@ interface Props {
    */
   navItems?: NavItem[];
   /**
-   * hreflang cluster: the published language versions of this page,
-   * rendered as absolute URLs. Empty for the shared root pages, which are
-   * not part of a language cluster.
+   * The published language versions of this page, rendered twice from the
+   * same data: as the hreflang cluster (absolute URLs) and as the visible
+   * language switcher (relative URLs). Empty for the shared root pages,
+   * which are not part of a language cluster, so no switcher renders.
    */
   alternates?: LocalePathSuffix[];
-  /**
-   * Visible language switcher links (published versions only). Rendered
-   * together with `lang`, i.e. only on `/<lang>/…` pages — the switcher
-   * contract: every language page passes its published versions, so it
-   * never contains a dead link.
-   */
-  languageSwitcher?: LocalePathSuffix[];
 }
 
 const {
@@ -50,7 +44,6 @@ const {
   lang,
   navItems,
   alternates = [],
-  languageSwitcher,
 } = Astro.props;
 
 const locale = lang ?? 'en';
@@ -121,7 +114,7 @@ const footerRssHref = lang ? `/${lang}/rss.xml` : '/rss.xml';
           }
         </ul>
       </nav>
-      {lang && languageSwitcher && <LanguageSwitcher links={languageSwitcher} currentLocale={lang} />}
+      {lang && alternates.length > 0 && <LanguageSwitcher links={alternates} currentLocale={lang} />}
     </header>
     <main id="main">
       <slot />

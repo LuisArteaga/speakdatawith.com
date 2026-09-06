@@ -12,13 +12,15 @@ interface Props {
   locale: Locale;
   /** Localized navigation for the article's language tree. */
   navItems: NavItem[];
-  /** hreflang cluster of the article's published language versions. */
+  /**
+   * The article's published language versions, rendered twice from the
+   * same data: as the hreflang cluster and as the visible language
+   * switcher (BaseLayout derives both).
+   */
   alternates?: LocalePathSuffix[];
-  /** Visible language switcher links (published versions only). */
-  languageSwitcher?: LocalePathSuffix[];
 }
 
-const { article, locale, navItems, alternates = [], languageSwitcher } = Astro.props;
+const { article, locale, navItems, alternates = [] } = Astro.props;
 const { data } = article;
 const strings = getUiDictionary(locale);
 
@@ -40,7 +42,6 @@ const updatedAtFormatted = data.updatedAt
   lang={locale}
   navItems={navItems}
   alternates={alternates}
-  languageSwitcher={languageSwitcher}
 >
   <article>
     <header class="article-header">
