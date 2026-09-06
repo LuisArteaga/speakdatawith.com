@@ -20,6 +20,7 @@ const de: Record<UiKey, string> = {
   homeEmpty: 'Es wurden noch keine Artikel veröffentlicht.',
   articlesHeading: 'Artikel',
   articlesDescription: 'Alle veröffentlichten Artikel, neueste zuerst.',
+  articlesListHeading: 'Alle Artikel',
   readArticle: 'Artikel lesen',
   articlesEmpty: 'Es wurden noch keine Artikel veröffentlicht.',
   publishedLabel: 'Veröffentlicht',

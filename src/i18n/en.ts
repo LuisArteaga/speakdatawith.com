@@ -20,6 +20,7 @@ const en = {
   homeEmpty: 'No articles published yet.',
   articlesHeading: 'Articles',
   articlesDescription: 'All published articles, newest first.',
+  articlesListHeading: 'All articles',
   readArticle: 'Read article',
   articlesEmpty: 'No articles published yet.',
   publishedLabel: 'Published',
