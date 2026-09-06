@@ -54,6 +54,23 @@ holds Cloudflare credentials.
 - The production build requires no secrets; the Pages project needs none
   either.
 
+## Before first production deployment
+
+Both legal placeholder pages ship with technical stub content only. They
+are deliberately excluded from indexing (`noindex`) and from the sitemap.
+
+Before the first production deployment, complete this checklist:
+
+1. Replace the placeholder on `/impressum/` with legally reviewed content.
+2. Replace the placeholder on `/datenschutz/` with legally reviewed content.
+3. For each page, remove the `noindex` prop passed to `BaseLayout` and
+   delete its entry from `NOINDEX_PAGE_PATHS` in `src/utils/navigation.ts`,
+   so the pages become indexable and rejoin the sitemap.
+
+The placeholders do not fail the build — this is a documented manual gate
+for the site owner, not an automated one. Connecting and enabling
+Cloudflare Pages itself also remains a manual owner step (see above).
+
 ## Analytics
 
 Cloudflare Web Analytics can be enabled later from the Cloudflare dashboard
