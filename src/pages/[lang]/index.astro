@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { getPublishedArticles } from '../../utils/articles';
+import { buildIndexAlternates } from '../../utils/alternates';
+import { buildLocalizedNavItems } from '../../utils/navigation';
+import { formatArticleDate } from '../../utils/dates';
+import { LOCALES, getUiDictionary, type Locale } from '../../i18n/config';
+
+export function getStaticPaths() {
+  // Imported bindings (LOCALES) are available inside getStaticPaths; only
+  // same-file declarations are out of scope, because Astro hoists the route
+  // function above the frontmatter. The locale therefore comes from the
+  // route params, which getStaticPaths itself restricts to LOCALES.
+  return LOCALES.map((locale) => ({ params: { lang: locale } }));
+}
+
+const locale = Astro.params.lang as Locale;
+const dict = getUiDictionary(locale);
+
+const allArticles = await getCollection('articles');
+const latestArticles = getPublishedArticles(allArticles, locale).slice(0, 3);
+const navItems = buildLocalizedNavItems(locale, Astro.url.pathname);
+const alternates = buildIndexAlternates(Astro.url.pathname);
+---
+
+<BaseLayout
+  title="SpeakDataWith"
+  description={dict.homeDescription}
+  lang={locale}
+  navItems={navItems}
+  alternates={alternates}
+>
+  <h1>SpeakDataWith</h1>
+  <p>{dict.homeIntro}</p>
+  <p><a href={`/${locale}/articles/`}>{dict.homeBrowseAll}</a></p>
+
+  <section aria-labelledby="latest-articles-heading">
+    <h2 id="latest-articles-heading">{dict.homeLatest}</h2>
+    {
+      latestArticles.length === 0 ? (
+        <p>{dict.homeEmpty}</p>
+      ) : (
+        <ul class="article-list">
+          {latestArticles.map((article) => (
+            <li>
+              <a href={`/${locale}/articles/${article.id}/`}>{article.data.title}</a>
+              <p class="article-meta">
+                <time datetime={article.data.publishedAt.toISOString()}>
+                  {formatArticleDate(article.data.publishedAt, locale)}
+                </time>
+              </p>
+              <p>{article.data.description}</p>
+              <p class="article-list__read-more">
+                <a href={`/${locale}/articles/${article.id}/`}>{dict.readArticle}</a>
+              </p>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</BaseLayout>

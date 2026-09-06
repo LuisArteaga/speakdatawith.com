@@ -1,8 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { buildRootNavItems } from '../utils/navigation';
+
+const navItems = buildRootNavItems('en', Astro.url.pathname);
 ---
 
-<BaseLayout title="About" description="About this website.">
+<BaseLayout
+  title="About"
+  description="About this website."
+  lang="en"
+  navItems={navItems}
+>
   <h1>About</h1>
   <p>
     This page is a technical placeholder. It will be replaced with editorial

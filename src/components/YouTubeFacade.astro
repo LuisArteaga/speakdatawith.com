@@ -1,14 +1,17 @@
 ---
 import { Image } from 'astro:assets';
 import { buildYouTubeWatchUrl } from '../utils/video';
+import { getUiDictionary, type Locale } from '../i18n/config';
 
 interface Props {
   videoId: string;
   title: string;
   poster: ImageMetadata;
+  locale: Locale;
 }
 
-const { videoId, title, poster } = Astro.props;
+const { videoId, title, poster, locale } = Astro.props;
+const strings = getUiDictionary(locale);
 
 // Render-time validation: the builder throws for malformed IDs, so a
 // content file with a broken videoId fails the build instead of shipping
@@ -34,8 +37,7 @@ const watchUrl = buildYouTubeWatchUrl(videoId);
       </svg>
     </span>
     <span class="youtube-facade__hint">
-      Selecting play loads this video from YouTube. Until then, no connection to
-      YouTube is made.
+      {strings.youtubeHint}
     </span>
   </button>
   <a
@@ -44,7 +46,7 @@ const watchUrl = buildYouTubeWatchUrl(videoId);
     target="_blank"
     rel="noopener noreferrer"
   >
-    Watch this video on YouTube
+    {strings.youtubeFallback}
   </a>
 </div>
 

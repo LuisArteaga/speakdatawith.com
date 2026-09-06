@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildLocalizedNavItems,
   buildNavItems,
+  buildRootNavItems,
   isNoindexPagePath,
   isNoindexPageUrl,
   NAV_ITEMS,
@@ -50,6 +52,70 @@ describe('buildNavItems', () => {
 
   it('exposes the nav items read-only from NAV_ITEMS', () => {
     expect(NAV_ITEMS.map((item) => item.href)).toEqual(['/', '/articles/', '/about/']);
+  });
+});
+
+describe('buildLocalizedNavItems', () => {
+  it('points Home and Articles into the language tree and About at the shared page', () => {
+    const items = buildLocalizedNavItems('de', '/de/');
+
+    expect(items.map((item) => ({ label: item.label, href: item.href }))).toEqual([
+      { label: 'Startseite', href: '/de/' },
+      { label: 'Artikel', href: '/de/articles/' },
+      { label: 'Über', href: '/about/' },
+    ]);
+  });
+
+  it('localizes the labels for every language', () => {
+    expect(buildLocalizedNavItems('en', '/en/').map((item) => item.label)).toEqual(['Home', 'Articles', 'About']);
+    expect(buildLocalizedNavItems('es', '/es/').map((item) => item.label)).toEqual(['Inicio', 'Artículos', 'Acerca de']);
+  });
+
+  it('marks the language homepage as current', () => {
+    const items = buildLocalizedNavItems('es', '/es/');
+
+    expect(items.filter((item) => item.isCurrent).map((item) => item.href)).toEqual(['/es/']);
+  });
+
+  it('marks the language article overview as current', () => {
+    const items = buildLocalizedNavItems('en', '/en/articles/');
+
+    expect(items.filter((item) => item.isCurrent).map((item) => item.href)).toEqual(['/en/articles/']);
+  });
+
+  it('marks nothing on an article detail page', () => {
+    const items = buildLocalizedNavItems('de', '/de/articles/foo/');
+
+    expect(items.every((item) => !item.isCurrent)).toBe(true);
+  });
+});
+
+describe('buildRootNavItems', () => {
+  it('keeps only Home and About, without an Articles link', () => {
+    const items = buildRootNavItems('en', '/about/');
+
+    expect(items.map((item) => item.href)).toEqual(['/en/', '/about/']);
+    expect(items.some((item) => item.href.includes('articles'))).toBe(false);
+  });
+
+  it('localizes the labels for the German legal pages', () => {
+    const items = buildRootNavItems('de', '/impressum/');
+
+    expect(items.map((item) => item.label)).toEqual(['Startseite', 'Über']);
+  });
+
+  it('points Home at the stable English home, not the redirect stub', () => {
+    const items = buildRootNavItems('de', '/datenschutz/');
+
+    expect(items[0]?.href).toBe('/en/');
+  });
+
+  it('marks About as current on the about page and nothing on the legal pages', () => {
+    const onAbout = buildRootNavItems('en', '/about/');
+    const onImpressum = buildRootNavItems('de', '/impressum/');
+
+    expect(onAbout.filter((item) => item.isCurrent).map((item) => item.href)).toEqual(['/about/']);
+    expect(onImpressum.every((item) => !item.isCurrent)).toBe(true);
   });
 });
 

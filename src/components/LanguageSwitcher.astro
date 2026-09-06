@@ -1,0 +1,31 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getUiDictionary, LANGUAGE_NAMES, type Locale } from '../i18n/config';
+import type { LocalePathSuffix } from '../utils/alternates';
+
+interface Props {
+  /** Published language versions to link; the current page's own version included. */
+  links: LocalePathSuffix[];
+  currentLocale: Locale;
+}
+
+const { links, currentLocale } = Astro.props;
+const label = getUiDictionary(currentLocale).languagesLabel;
+---
+
+<nav class="language-switcher" aria-label={label}>
+  <ul>
+    {
+      links.map((link) => (
+        <li>
+          <a
+            href={getRelativeLocaleUrl(link.locale, link.pathSuffix)}
+            aria-current={link.locale === currentLocale ? 'true' : undefined}
+          >
+            {LANGUAGE_NAMES[link.locale]}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>

@@ -1,29 +1,35 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import RepositoryCTA from '../components/RepositoryCTA.astro';
+import { formatArticleDate } from '../utils/dates';
+import { getUiDictionary, type Locale } from '../i18n/config';
+import type { LocalePathSuffix } from '../utils/alternates';
 import type { Article } from '../utils/articles';
+import type { NavItem } from '../utils/navigation';
 
 interface Props {
   article: Article;
+  locale: Locale;
+  /** Localized navigation for the article's language tree. */
+  navItems: NavItem[];
+  /**
+   * The article's published language versions, rendered twice from the
+   * same data: as the hreflang cluster and as the visible language
+   * switcher (BaseLayout derives both).
+   */
+  alternates?: LocalePathSuffix[];
 }
 
-const { article } = Astro.props;
+const { article, locale, navItems, alternates = [] } = Astro.props;
 const { data } = article;
+const strings = getUiDictionary(locale);
 
-const publishedAt = data.publishedAt.toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const publishedAt = formatArticleDate(data.publishedAt, locale);
 
 const updatedAt = data.updatedAt?.toISOString() ?? null;
 
 const updatedAtFormatted = data.updatedAt
-  ? data.updatedAt.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })
+  ? formatArticleDate(data.updatedAt, locale)
   : null;
 ---
 
@@ -33,16 +39,19 @@ const updatedAtFormatted = data.updatedAt
   ogType="article"
   publishedTime={data.publishedAt}
   modifiedTime={data.updatedAt ?? undefined}
+  lang={locale}
+  navItems={navItems}
+  alternates={alternates}
 >
   <article>
     <header class="article-header">
       <h1>{data.title}</h1>
       <p>{data.description}</p>
       <p class="article-meta">
-        Published <time datetime={data.publishedAt.toISOString()}>{publishedAt}</time>
+        {strings.publishedLabel} <time datetime={data.publishedAt.toISOString()}>{publishedAt}</time>
         {updatedAt && (
           <span>
-            {' · '}Updated <time datetime={updatedAt}>{updatedAtFormatted}</time>
+            {' · '}{strings.updatedLabel} <time datetime={updatedAt}>{updatedAtFormatted}</time>
           </span>
         )}
         {data.pillar.length > 0 && (
@@ -57,12 +66,12 @@ const updatedAtFormatted = data.updatedAt
     </header>
     <slot />
     <footer>
-      {data.repositoryUrl && <RepositoryCTA url={data.repositoryUrl} />}
+      {data.repositoryUrl && <RepositoryCTA url={data.repositoryUrl} locale={locale} />}
       {data.releaseUrl && (
-        <p><a href={data.releaseUrl} rel="noopener noreferrer">Release for this article</a></p>
+        <p><a href={data.releaseUrl} rel="noopener noreferrer">{strings.viewRelease}</a></p>
       )}
       {data.evidenceUrl && (
-        <p><a href={data.evidenceUrl} rel="noopener noreferrer">Evidence report for this article</a></p>
+        <p><a href={data.evidenceUrl} rel="noopener noreferrer">{strings.viewEvidenceReport}</a></p>
       )}
     </footer>
   </article>

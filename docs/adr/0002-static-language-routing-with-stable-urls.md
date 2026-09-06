@@ -1,14 +1,25 @@
 # Static language routing with stable URLs
 
+> **Status:** Amended 2026-09 while implementing the multilingual content
+> architecture: the redirect set grew from one to three edge redirects (root,
+> legacy article paths, legacy RSS). The decision and its rationale below are
+> unchanged; only the recorded redirect set was reconciled with the
+> implementation (`public/_redirects`).
+
 The site serves English, German, and Spanish at stable, directly addressable
 URLs (`/en/…`, `/de/…`, `/es/…`, including the default locale in the prefix)
 and deliberately performs no automatic language or region detection — no IP,
 geo-location, `Accept-Language`, or browser-language redirects, neither at
-build time nor via client-side JS. The only redirect is the fixed root
-redirect `/` → `/en/`, implemented as a real 301 in Cloudflare Pages
-`public/_redirects` (Astro's static `redirects` config would only emit a
-meta-refresh page without a status code, since there is no adapter). Every
-published language version is self-canonical and linked to its published
+build time nor via client-side JS. The only redirects are fixed, locale-pinned
+301s in Cloudflare Pages `public/_redirects` (Astro's static `redirects`
+config would only emit a meta-refresh page without a status code, since there
+is no adapter), none of which negotiates a language:
+
+- `/` → `/en/` (fixed default for direct visitors),
+- `/articles/*` → `/en/articles/:splat` (legacy English URLs kept alive),
+- `/rss.xml` → `/en/rss.xml` (legacy feed URL kept alive).
+
+Every published language version is self-canonical and linked to its published
 siblings via reciprocal `hreflang`; `x-default` is omitted while `/` is a
 pure redirect stub.
 
