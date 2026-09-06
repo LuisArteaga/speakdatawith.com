@@ -52,8 +52,8 @@ there. The `secret-scan` job needs no secrets and runs on every PR.
 ## Relationship to the deterministic site checks
 
 The deterministic validation for the Astro site (`validate-site.yml` with
-`npm run check` and `npm run build`, issue #1) remains the deterministic gate
-and runs unchanged alongside these supplementary toolkit gates.
+`npm run validate`) remains the deterministic gate and runs unchanged
+alongside these supplementary toolkit gates.
 
 ## Upgrades
 

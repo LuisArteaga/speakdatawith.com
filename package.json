@@ -8,8 +8,10 @@
   "scripts": {
     "dev": "astro dev",
     "check": "astro check",
+    "check:dist": "node scripts/check-dist.mjs",
     "test": "vitest run",
-    "build": "astro check && astro build",
+    "build": "astro build",
+    "validate": "npm run check && npm run build && npm run check:dist",
     "preview": "astro preview"
   },
   "dependencies": {

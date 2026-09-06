@@ -31,11 +31,14 @@ from all views, in dev as well as in production builds.
 ## Validate
 
 ```bash
-npm run check
+npm run validate
 ```
 
-Runs `astro check` (TypeScript strict mode plus Astro diagnostics). CI runs
-the same command on every pull request.
+The full gate, in order: `astro check` (TypeScript strict mode plus Astro
+diagnostics), the production build, and the automated `dist/` leak check.
+`astro check` runs exactly once. CI runs the same command on every pull
+request. The steps can also be run individually: `npm run check`,
+`npm run build`, `npm run check:dist`.
 
 ## Test
 
@@ -55,19 +58,22 @@ part of the `validate-site` workflow.
 npm run build
 ```
 
-Runs `astro check && astro build` and writes the static output to `dist/`.
+Runs `astro build` (no type check — the full gate is `npm run validate`)
+and writes the static output to `dist/`.
 The build needs no secrets and no network access.
 
 ## Inspect `dist/`
 
 ```bash
-find dist -type f | sort
+npm run check:dist
 ```
 
-Everything Cloudflare Pages will publish is in that list. Check it before
-merging: it must contain only HTML pages, the RSS feed, the sitemap, the
-favicon, `robots.txt`, and optimized images. No source maps, no working
-files, no draft sources.
+Fails when `dist/` contains anything that must not be published: `.env`
+files, `.git`/`.github`/`docs` directories, Markdown sources, or source
+maps. The check runs as the last step of `npm run validate`, so nothing
+leaky passes the gate silently. For a full file listing,
+`find dist -type f | sort` still works: it must show only HTML pages, the
+RSS feed, the sitemap, the favicon, `robots.txt`, and optimized images.
 
 ## Preview the production build
 

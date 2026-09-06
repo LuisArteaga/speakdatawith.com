@@ -21,7 +21,7 @@ runtime.
 | Images | Astro asset pipeline (`astro:assets`) | Local files only, optimized at build time |
 | Video | Click-to-load facade | `src/components/YouTubeFacade.astro`, `youtube-nocookie.com` |
 | Unit tests | Vitest | Pure logic in `src/utils/` and the schema in `src/schemas/article.ts`, tests in `tests/` |
-| Validation | `npm test` / `npm run check` / `npm run build` | GitHub Actions workflow `.github/workflows/validate-site.yml` |
+| Validation | `npm test` / `npm run validate` | GitHub Actions workflow `.github/workflows/validate-site.yml` |
 | Hosting | Cloudflare Pages | See `docs/cloudflare-pages-setup.md` |
 
 ## Deliberate exclusions
@@ -79,8 +79,11 @@ allowlist before it is used in a URL.
 
 ## Supply chain
 
-- `astro check && astro build` runs in CI (workflow `validate-site`, stable
-  job name for use as a required status check).
+- `npm run validate` runs in CI (workflow `validate-site`, stable job name
+  for use as a required status check): `astro check` exactly once, then
+  `astro build`, then the automated `dist/` leak check
+  (`scripts/check-dist.mjs`) that fails when the build output would leak
+  environment files, git metadata, docs, Markdown sources, or source maps.
 - The workflow needs no secrets and has `permissions: contents: read`.
 - Supplementary quality gates run from
   [quality-gates-toolkit](https://github.com/LuisArteaga/quality-gates-toolkit)
