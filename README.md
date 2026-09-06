@@ -2,7 +2,8 @@
 
 Static website for SpeakDataWith: articles on building observable,
 governable data platforms. Every article demonstrates its claims with a
-repository readers can run themselves.
+repository readers can run themselves. Articles are published in English,
+German, and Spanish, with English as the source of truth.
 
 The site is built with [Astro](https://astro.build) and deployed on
 Cloudflare Pages. It has no CMS, no database, and no server-side runtime.
@@ -23,6 +24,7 @@ Detailed documentation lives in [`docs/`](docs/):
 | --- | --- |
 | [`docs/architecture.md`](docs/architecture.md) | Architecture and technology decisions |
 | [`docs/content-schema.md`](docs/content-schema.md) | Article frontmatter schema |
+| [`docs/multilingual-architecture.md`](docs/multilingual-architecture.md) | Multilingual publishing model (EN/DE/ES) |
 | [`docs/image-guidelines.md`](docs/image-guidelines.md) | Image formats, sizes, and handling |
 | [`docs/local-development.md`](docs/local-development.md) | Local development guide |
 | [`docs/github-repository-settings.md`](docs/github-repository-settings.md) | Manual GitHub repository settings |
@@ -45,7 +47,9 @@ npm ci
 npm run dev
 ```
 
-The site is then available at `http://localhost:4321`.
+The site is then available at `http://localhost:4321/en/` (the root `/`
+redirects to it on Cloudflare Pages; `astro dev` and `astro preview` do
+not honor `public/_redirects`).
 
 ## Validation
 
@@ -95,8 +99,12 @@ Serves the production build from `dist/` locally.
 ## Content
 
 Articles live in `src/content/articles/` as Markdown (`.md`) or, when they
-embed components, MDX (`.mdx`). The required frontmatter is documented in
-[`docs/content-schema.md`](docs/content-schema.md).
+embed components, MDX (`.mdx`), in one directory per language
+(`en/`, `de/`, `es/`). English is the source of truth; German and Spanish
+translations publish only after their source and a human review. The
+required frontmatter and the translation rules are documented in
+[`docs/content-schema.md`](docs/content-schema.md) and
+[`docs/multilingual-architecture.md`](docs/multilingual-architecture.md).
 
 ## Images
 

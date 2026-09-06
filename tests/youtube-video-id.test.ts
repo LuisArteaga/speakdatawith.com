@@ -3,11 +3,15 @@ import { articleSchema } from '../src/schemas/article';
 import { isValidYouTubeVideoId } from '../src/utils/video';
 
 const VALID_BASE = {
-  contentId: 'SDW-001',
+  contentId: 'SDW-001-EN',
+  translationKey: 'SDW-001',
+  language: 'en',
+  translationOf: null,
+  translationStatus: 'source',
+  sourceRevision: 1,
   title: 'A title',
   description: 'A description',
   publishedAt: '2026-01-01T00:00:00Z',
-  language: 'en',
   pillar: ['Generate'],
   audience: ['data engineers'],
   tags: [],

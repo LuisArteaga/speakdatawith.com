@@ -1,0 +1,3 @@
+/             /en/                 301
+/articles/*   /en/articles/:splat   301
+/rss.xml      /en/rss.xml           301

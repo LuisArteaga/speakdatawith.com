@@ -1,7 +1,12 @@
 ---
 import '../styles/global.css';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import { buildOgMetadata, buildPageTitle, SITE_NAME } from '../utils/og';
 import { buildNavItems, isNoindexPagePath } from '../utils/navigation';
+import { getUiDictionary, type Locale } from '../i18n/config';
+import type { LocalePathSuffix } from '../utils/alternates';
+import type { NavItem } from '../utils/navigation';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 
 interface Props {
   title: string;
@@ -9,6 +14,31 @@ interface Props {
   ogType?: 'website' | 'article';
   publishedTime?: Date;
   modifiedTime?: Date;
+  /**
+   * Site language of the page. Omitted only on the shared root pages that
+   * keep their current English chrome (the 404 page must stay unchanged);
+   * localized pages pass their locale, which switches `<html lang>`, the
+   * UI strings, the footer links, and the RSS autodiscovery link.
+   */
+  lang?: Locale;
+  /**
+   * Nav items; defaults to the root `NAV_ITEMS`. Language pages pass
+   * `buildLocalizedNavItems(...)`, the root pages a reduced list.
+   */
+  navItems?: NavItem[];
+  /**
+   * hreflang cluster: the published language versions of this page,
+   * rendered as absolute URLs. Empty for the shared root pages, which are
+   * not part of a language cluster.
+   */
+  alternates?: LocalePathSuffix[];
+  /**
+   * Visible language switcher links (published versions only). Rendered
+   * together with `lang`, i.e. only on `/<lang>/…` pages — the switcher
+   * contract: every language page passes its published versions, so it
+   * never contains a dead link.
+   */
+  languageSwitcher?: LocalePathSuffix[];
 }
 
 const {
@@ -17,7 +47,15 @@ const {
   ogType = 'website',
   publishedTime,
   modifiedTime,
+  lang,
+  navItems,
+  alternates = [],
+  languageSwitcher,
 } = Astro.props;
+
+const locale = lang ?? 'en';
+const dict = getUiDictionary(locale);
+const items = navItems ?? buildNavItems(Astro.url.pathname);
 
 const pageTitle = buildPageTitle(title);
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
@@ -31,12 +69,14 @@ const ogMetadata = buildOgMetadata({
   modifiedTime,
 });
 
-const navItems = buildNavItems(Astro.url.pathname);
 const noindex = isNoindexPagePath(Astro.url.pathname);
+const rssHref = lang ? `/${lang}/rss.xml` : '/rss.xml';
+const footerArticlesHref = lang ? `/${lang}/articles/` : '/articles/';
+const footerRssHref = lang ? `/${lang}/rss.xml` : '/rss.xml';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -49,20 +89,29 @@ const noindex = isNoindexPagePath(Astro.url.pathname);
       rel="alternate"
       type="application/rss+xml"
       title={SITE_NAME}
-      href={new URL('/rss.xml', Astro.site).href}
+      href={rssHref}
     />
+    {
+      alternates.map((alternate) => (
+        <link
+          rel="alternate"
+          hreflang={alternate.locale}
+          href={new URL(getRelativeLocaleUrl(alternate.locale, alternate.pathSuffix), Astro.site).href}
+        />
+      ))
+    }
     {Object.entries(ogMetadata).map(([property, content]) => <meta property={property} content={content} />)}
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main">{dict.skipToContent}</a>
     <header class="site-header">
-      <nav aria-label="Main navigation">
+      <nav aria-label={dict.mainNavLabel}>
         <ul>
           {
-            navItems.map((item) => (
+            items.map((item) => (
               <li>
                 <a href={item.href} aria-current={item.isCurrent ? 'page' : undefined}>
                   {item.label}
@@ -72,12 +121,13 @@ const noindex = isNoindexPagePath(Astro.url.pathname);
           }
         </ul>
       </nav>
+      {lang && languageSwitcher && <LanguageSwitcher links={languageSwitcher} currentLocale={lang} />}
     </header>
     <main id="main">
       <slot />
     </main>
     <footer class="site-footer">
-      <p>© 2026 SpeakDataWith. <a href="/articles/">Articles</a> · <a href="/rss.xml">RSS</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></p>
+      <p>© 2026 {SITE_NAME}. <a href={footerArticlesHref}>{dict.footerArticles}</a> · <a href={footerRssHref}>{dict.footerRss}</a> · <a href="/impressum/">{dict.footerImpressum}</a> · <a href="/datenschutz/">{dict.footerDatenschutz}</a></p>
     </footer>
   </body>
 </html>

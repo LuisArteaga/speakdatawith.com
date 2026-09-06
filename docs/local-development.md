@@ -25,8 +25,11 @@ npm ci
 npm run dev
 ```
 
-The site is served at `http://localhost:4321`. Draft articles are excluded
-from all views, in dev as well as in production builds.
+The site is served at `http://localhost:4321`. Because `astro dev` does
+not honor `public/_redirects` (a Cloudflare-specific file), the root `/`
+returns a 404 locally — open `http://localhost:4321/en/` directly. Draft
+articles are excluded from all views, in dev as well as in production
+builds.
 
 ## Validate
 
@@ -46,11 +49,14 @@ request. The steps can also be run individually: `npm run check`,
 npm test
 ```
 
-Runs the Vitest unit tests in `tests/`. They cover the pure logic extracted
-into `src/utils/` (draft filtering and sorting, YouTube video-ID validation,
-title and Open Graph metadata construction) and the article frontmatter
-schema in `src/schemas/article.ts`. CI runs them on every pull request as
-part of the `validate-site` workflow.
+Runs the Vitest unit tests in `tests/`. They cover the pure logic
+extracted into `src/utils/` (publication and translation rules, hreflang
+and canonical URL construction, localized date formatting, file-name
+slugification, YouTube video-ID validation and URL builders, title and
+Open Graph metadata construction, navigation), the article frontmatter
+schema in `src/schemas/article.ts`, and the UI dictionaries in
+`src/i18n/`. CI runs them on every pull request as part of the
+`validate-site` workflow.
 
 ## Production build
 
@@ -73,7 +79,8 @@ files, `.git`/`.github`/`docs` directories, Markdown sources, or source
 maps. The check runs as the last step of `npm run validate`, so nothing
 leaky passes the gate silently. For a full file listing,
 `find dist -type f | sort` still works: it must show only HTML pages, the
-RSS feed, the sitemap, the favicon, `robots.txt`, and optimized images.
+per-language RSS feeds, the sitemap, the favicon, `robots.txt`, and
+optimized images.
 
 ## Preview the production build
 
@@ -84,6 +91,12 @@ npm run preview
 Serves `dist/` locally so you can check the built site, not the dev server.
 
 ## Troubleshooting
+
+- **`/` returns a 404 in dev and preview**: `astro dev` and `astro
+  preview` ignore `public/_redirects`, which only the Cloudflare edge
+  honors. Open `http://localhost:4321/en/` directly; the root redirect
+  works on Cloudflare Pages (see
+  [`docs/multilingual-architecture.md`](multilingual-architecture.md)).
 
 - **Build fails with a stale content reference** after articles were
   renamed or deleted: Astro's content layer keeps a persistent cache in

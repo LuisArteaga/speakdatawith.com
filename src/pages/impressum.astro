@@ -1,10 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { buildRootNavItems } from '../utils/navigation';
+
+const navItems = buildRootNavItems('de', Astro.url.pathname);
 ---
 
 <BaseLayout
   title="Impressum"
   description="Legal notice placeholder. Content pending legal review."
+  lang="de"
+  navItems={navItems}
 >
   <h1>Impressum</h1>
   <p class="placeholder-notice">

@@ -1,3 +1,5 @@
+import { DEFAULT_LOCALE, getUiDictionary, type Locale } from '../i18n/config';
+
 export interface NavLink {
   label: string;
   href: string;
@@ -18,13 +20,50 @@ export const NAV_ITEMS: ReadonlyArray<NavLink> = [
  * The header navigation items with `isCurrent` set on the item whose `href`
  * exactly equals `currentPathname`. Exact match only: article detail pages
  * mark nothing (no section-level highlighting), and unknown paths such as
- * the 404 page highlight nothing.
+ * the 404 page highlight nothing. `items` defaults to the root
+ * `NAV_ITEMS`; the localized builders below pass their own lists.
  */
-export function buildNavItems(currentPathname: string): NavItem[] {
-  return NAV_ITEMS.map((item) => ({
+export function buildNavItems(
+  currentPathname: string,
+  items: ReadonlyArray<NavLink> = NAV_ITEMS,
+): NavItem[] {
+  return items.map((item) => ({
     ...item,
     isCurrent: item.href === currentPathname,
   }));
+}
+
+/**
+ * The navigation on `/<lang>/…` pages: Home and Articles point into the
+ * page's language tree, About stays on the shared English page; labels
+ * come from the UI dictionaries.
+ */
+export function buildLocalizedNavItems(
+  locale: Locale,
+  currentPathname: string,
+): NavItem[] {
+  const dictionary = getUiDictionary(locale);
+  return buildNavItems(currentPathname, [
+    { label: dictionary.navHome, href: `/${locale}/` },
+    { label: dictionary.navArticles, href: `/${locale}/articles/` },
+    { label: dictionary.navAbout, href: '/about/' },
+  ]);
+}
+
+/**
+ * The reduced navigation for the root pages (about, impressum,
+ * datenschutz): Home points to the language home (`/en/` — a stable URL
+ * per ADR-0002, not the `/` redirect stub) and About to `/about/`. There
+ * is deliberately no Articles link: the root `/articles/` route no longer
+ * exists and only redirects at the Cloudflare edge. Labels come from the
+ * UI dictionaries so the German legal pages get German labels.
+ */
+export function buildRootNavItems(locale: Locale, currentPathname: string): NavItem[] {
+  const dictionary = getUiDictionary(locale);
+  return buildNavItems(currentPathname, [
+    { label: dictionary.navHome, href: `/${DEFAULT_LOCALE}/` },
+    { label: dictionary.navAbout, href: '/about/' },
+  ]);
 }
 
 /**
