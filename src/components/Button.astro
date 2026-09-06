@@ -1,0 +1,87 @@
+---
+/**
+ * Action element rendered as <a> when `href` is given, otherwise as a
+ * <button type="button"> (never a submit button). Colors, radii, glow,
+ * and motion come exclusively from the design tokens.
+ */
+interface Props {
+  /** When set, the button renders as a link to this target. */
+  href?: string;
+  variant?: 'primary' | 'ghost';
+}
+
+const { href, variant = 'primary' } = Astro.props;
+const classes = ['button', `button--${variant}`];
+---
+
+{
+  href ? (
+    <a class:list={classes} href={href}>
+      <slot />
+    </a>
+  ) : (
+    <button class:list={classes} type="button">
+      <slot />
+    </button>
+  )
+}
+
+<style>
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-1);
+    padding: 0.75rem 1.25rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .button--primary {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    color: var(--color-text);
+    box-shadow: var(--glow-primary);
+  }
+
+  .button--primary:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      var(--glow-primary),
+      var(--glow-accent);
+  }
+
+  .button--ghost {
+    background: transparent;
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+
+  .button--ghost:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-border-active);
+    box-shadow: var(--glow-accent);
+  }
+
+  .button:focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .button,
+    .button:hover {
+      transform: none;
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,51 @@
+---
+/**
+ * Pill-shaped monospace label for technical metadata (dates, counts,
+ * tags). Colors come exclusively from the design tokens.
+ */
+interface Props {
+  /** Render the decorative glowing dot in front of the content. */
+  dot?: boolean;
+  /** `accent` swaps the border to the accent-tinted token. */
+  variant?: 'default' | 'accent';
+}
+
+const { dot = true, variant = 'default' } = Astro.props;
+---
+
+<span class:list={['badge', `badge--${variant}`]}>
+  {dot && <span class="badge__dot" aria-hidden="true" />}
+  <span class="badge__content"><slot /></span>
+</span>
+
+<style>
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.7rem;
+    background: var(--color-primary-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    color: var(--color-text);
+  }
+
+  .badge--accent {
+    border-color: var(--color-border-accent);
+  }
+
+  .badge__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 6px var(--color-accent);
+  }
+
+  .badge__content {
+    white-space: nowrap;
+  }
+</style>

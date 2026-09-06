@@ -1,0 +1,49 @@
+/* SpeakDataWith design tokens (Design System v1).
+ *
+ * Single source of truth for colors, typography, radii, shadows, glow
+ * effects, and motion. Component styles reference these custom properties
+ * and must not hard-code color values (see docs/design-system.md).
+ *
+ * --color-signal (cyan) is reserved for technical labels, nodes, and
+ * status indicators - never for surfaces or buttons.
+ */
+
+:root {
+  /* Farben */
+  --color-bg: #0a0910;
+  --color-surface: #120f1d;
+  --color-surface-elevated: #191426;
+
+  --color-text: #f8fafc;
+  --color-text-muted: #94a3b8;
+
+  --color-primary: #8b5cf6;
+  --color-primary-light: #a78bfa;
+  --color-accent: #d946ef;
+  --color-signal: #38bdf8;
+
+  --color-border: rgba(139, 92, 246, 0.25);
+  --color-border-active: rgba(217, 70, 239, 0.6);
+
+  /* Badge tokens: subtle primary wash and accent-tinted border. */
+  --color-primary-subtle: rgba(139, 92, 246, 0.12);
+  --color-border-accent: rgba(217, 70, 239, 0.35);
+
+  /* Typografie */
+  --font-sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Fira Code', ui-monospace, monospace;
+
+  /* Form */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  /* Effekte */
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --glow-primary: 0 0 25px rgba(139, 92, 246, 0.4);
+  --glow-accent: 0 0 35px rgba(217, 70, 239, 0.25);
+
+  /* Motion */
+  --transition-fast: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s ease;
+}

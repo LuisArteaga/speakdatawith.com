@@ -1,4 +1,12 @@
 ---
+// Self-hosted webfonts (no CDN); per-weight CSS files bundled by Vite.
+import '@fontsource/fira-code/400.css';
+import '@fontsource/fira-code/600.css';
+import '@fontsource/space-grotesk/400.css';
+import '@fontsource/space-grotesk/600.css';
+import '@fontsource/space-grotesk/700.css';
+// Design tokens must load before the structural base styles.
+import '../styles/tokens.css';
 import '../styles/global.css';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { buildOgMetadata, buildPageTitle, SITE_NAME } from '../utils/og';
