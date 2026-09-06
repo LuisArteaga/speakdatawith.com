@@ -1,0 +1,33 @@
+version: "1.0"
+
+protected_terms:
+  - Snowflake
+  - dbt
+  - GitHub
+  - GitHub Actions
+  - OpenTelemetry
+  - VS Code
+  - Pull Request
+  - SQL
+  - YAML
+  - JSON
+  - API
+  - CI/CD
+  - Data Vault
+
+terms:
+  - source: evidence report
+    de: Evidence Report
+    es: informe de evidencias
+
+  - source: quality gate
+    de: Quality Gate
+    es: control de calidad
+
+  - source: data pipeline
+    de: Datenpipeline
+    es: pipeline de datos
+
+  - source: workflow run
+    de: Workflow Run
+    es: ejecución del workflow

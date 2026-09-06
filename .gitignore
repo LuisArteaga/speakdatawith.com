@@ -6,3 +6,8 @@ dist/
 !.env.example
 .DS_Store
 *.log
+
+# Temporary translation segment/report files (issue #15); only the
+# directory marker itself is committed.
+translation-work/*
+!translation-work/.gitkeep

@@ -12,7 +12,10 @@
     "test": "vitest run",
     "build": "astro build",
     "validate": "npm run check && npm run build && npm run check:dist",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "translate:extract": "node scripts/translation/extract.mjs",
+    "translate:apply": "node scripts/translation/apply.mjs",
+    "translate:validate": "node scripts/translation/validate.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.0.0",
@@ -22,7 +25,17 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "mdast-util-frontmatter": "^2.0.1",
+    "mdast-util-gfm": "^3.1.0",
+    "mdast-util-mdx": "^3.0.0",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-mdx": "^3.1.1",
+    "remark-parse": "^11.0.0",
+    "remark-stringify": "^11.0.0",
     "typescript": "6.0.3",
-    "vitest": "^5.0.0"
+    "unified": "^11.0.5",
+    "vitest": "^5.0.0",
+    "yaml": "^2.9.0"
   }
 }

@@ -38,6 +38,12 @@ export const articleSchema = z
     translationStatus: z.enum(['source', 'generated', 'reviewed', 'stale']),
     /** Version counter of the source article this version was translated from. */
     sourceRevision: z.number().int().positive(),
+    /** Provider/model identifier that produced a machine translation (e.g. "acme/model-1"); `null` for English sources and human-written versions. */
+    translationModel: z.string().min(1).nullable().default(null),
+    /** Version of the translation skill/prompt used to generate a machine translation; `null` when not machine-generated. */
+    translationPromptVersion: z.string().min(1).nullable().default(null),
+    /** Date the machine translation was produced; `null` when not machine-generated. */
+    translatedAt: z.coerce.date().nullable().default(null),
     title: z.string().min(1),
     description: z.string().min(1),
     publishedAt: z.coerce.date(),

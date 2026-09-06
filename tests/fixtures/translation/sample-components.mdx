@@ -1,0 +1,36 @@
+---
+contentId: "SDW-002-EN"
+translationKey: "SDW-002"
+language: "en"
+translationOf: null
+translationStatus: "source"
+sourceRevision: 1
+title: "Embedding components in translated articles"
+description: "How the translation workflow handles Figure, YouTubeFacade, and RepositoryCTA."
+publishedAt: 2026-09-02
+updatedAt: null
+draft: false
+pillar:
+  - Generate
+audience:
+  - Analytics Engineers
+tags: []
+repositoryUrl: null
+releaseUrl: null
+evidenceUrl: null
+youtubeId: null
+---
+
+import Figure from '../../components/Figure.astro';
+import YouTubeFacade from '../../components/YouTubeFacade.astro';
+import RepositoryCTA from '../../components/RepositoryCTA.astro';
+
+## Components travel with their content
+
+The Figure below carries an alt text and a caption; both are translated. The `src` expression and the import statements are protected.
+
+<Figure src={pipelineImage} alt="Pipeline overview with three stages" caption="Figure 1 — the pipeline under test" />
+
+<YouTubeFacade videoId="aBcD1234_-9" title="Demo walkthrough of the pipeline" poster={posterImage} locale="en" />
+
+Browse the full setup in the repository: <RepositoryCTA url="https://github.com/example/quality-gates" label="View the quality gates repository" locale="en" />

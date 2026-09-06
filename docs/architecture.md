@@ -23,6 +23,7 @@ runtime.
 | Video | Click-to-load facade | `src/components/YouTubeFacade.astro`, `youtube-nocookie.com` |
 | Unit tests | Vitest | Pure logic in `src/utils/` and the schema in `src/schemas/article.ts`, tests in `tests/` |
 | Validation | `npm test` / `npm run validate` | GitHub Actions workflow `.github/workflows/validate-site.yml` |
+| Translation workflow | Deterministic scripts + versioned skill | `scripts/translation/`, `docs/translation/`; LLM step outside CI under human control (ADR-0001) |
 | Hosting | Cloudflare Pages | See `docs/cloudflare-pages-setup.md` |
 
 ## Deliberate exclusions
