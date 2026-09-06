@@ -35,6 +35,9 @@
 
   /* Form */
   --radius-sm: 8px;
+  /* --radius-md has no consumer yet by design: the v1 token set is fixed
+   * by the design-system issue and --radius-md is reserved for the
+   * follow-up hero component (see docs/design-system.md). */
   --radius-md: 12px;
   --radius-lg: 16px;
 

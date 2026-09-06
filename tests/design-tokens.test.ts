@@ -51,7 +51,8 @@ const REQUIRED_TOKENS = [
   '--transition-slow',
 ];
 
-const HEX_COLOR = /#[0-9a-fA-F]{6}\b/;
+/** Color literals: 3/4/6/8-digit hex plus rgb()/rgba()/hsl()/hsla() notation. */
+const COLOR_LITERAL = /#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/;
 
 describe('design tokens', () => {
   it('tokens.css defines every mandated design token', () => {
@@ -63,31 +64,27 @@ describe('design tokens', () => {
 });
 
 describe('token-only component styling', () => {
-  it('hex color literals appear only inside the BrandOwl SVG markup', () => {
-    const componentDir = join(repoRoot, 'src', 'components');
-    const files = readdirSync(componentDir).filter((name) =>
-      name.endsWith('.astro'),
+  it('color literals appear only inside the BrandOwl SVG markup', () => {
+    // Scans EVERY .astro file under src/ (page-level <style> blocks
+    // included), not just src/components.
+    const astroFiles = listSrcFiles().filter((path) =>
+      path.endsWith('.astro'),
     );
-    expect(files.length).toBeGreaterThan(0);
-    for (const name of files) {
-      const content = readFileSync(join(componentDir, name), 'utf8');
-      if (name === 'BrandOwl.astro') {
-        // The two pure-white glint highlights live in the SVG markup; the
-        // scoped style block outside it must stay token-only.
-        const withoutSvgMarkup = content.replace(
-          /<svg[\s\S]*<\/svg>/,
-          '',
-        );
-        expect(
-          HEX_COLOR.test(withoutSvgMarkup),
-          `${name} uses hex colors outside the SVG markup`,
-        ).toBe(false);
-      } else {
-        expect(
-          HEX_COLOR.test(content),
-          `${name} uses hex color literals`,
-        ).toBe(false);
-      }
+    expect(astroFiles.length).toBeGreaterThan(0);
+    for (const path of astroFiles) {
+      const content = readRepoFile(path);
+      const isBrandOwl = path.endsWith('BrandOwl.astro');
+      const scanned = isBrandOwl
+        ? // The canonical SVG markup keeps two pure-white glint highlights
+          // (no token exists) and two subtle rgba surface fills; everything
+          // outside the <svg> element (frontmatter, scoped style) must be
+          // literal-free.
+          content.replace(/<svg[\s\S]*<\/svg>/, '')
+        : content;
+      expect(
+        COLOR_LITERAL.test(scanned),
+        `${path} uses color literals`,
+      ).toBe(false);
     }
   });
 });

@@ -17,13 +17,19 @@ guard). `global.css` keeps the layout-scale tokens `--content-width` and
 
 Rules:
 
-- Component styles use token references exclusively — no hex or rgba
-  literals in `.astro` files. The only exception is the SVG markup of
-  `BrandOwl.astro` (its two pure-white glint highlights have no token).
+- Component styles use token references exclusively — no hex, rgb()/rgba(),
+  or hsl()/hsla() literals in `.astro` files. The only exception is the SVG
+  markup of `BrandOwl.astro`: its two pure-white glint highlights (no token
+  exists for pure white) and two subtle rgba surface fills are part of the
+  canonical, unchangeable SVG. `tests/design-tokens.test.ts` enforces this
+  for every `.astro` file under `src/`.
 - `--color-signal` (cyan) is reserved for technical labels, nodes, and
   status indicators — never for surfaces or buttons.
 - Every file with transitions/animations carries a
   `prefers-reduced-motion: reduce` block.
+- The token set is the fixed v1 contract from the design-system issue.
+  `--radius-md` currently has no consumer by design: it is reserved for the
+  follow-up hero component and must not be removed from the set.
 
 Fonts are self-hosted via `@fontsource/space-grotesk` (400/600/700) and
 `@fontsource/fira-code` (400/600); the per-weight CSS files are imported in
