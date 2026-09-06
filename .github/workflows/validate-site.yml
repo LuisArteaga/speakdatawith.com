@@ -38,8 +38,7 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Check
-        run: npm run check
-
-      - name: Build
-        run: npm run build
+      # Runs astro check once, astro build, and the dist leak check
+      # (scripts/check-dist.mjs) — the same gate as local `npm run validate`.
+      - name: Validate
+        run: npm run validate

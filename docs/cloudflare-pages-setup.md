@@ -14,8 +14,11 @@ holds Cloudflare credentials.
 5. Build command:
 
    ```bash
-   npm run build
+   npm run validate
    ```
+
+   This is the same gate as the repository CI: `astro check` (once), the
+   Astro build, and the automated `dist/` leak check.
 
 6. Output directory:
 
@@ -34,9 +37,12 @@ holds Cloudflare credentials.
 ## What Cloudflare publishes
 
 - Cloudflare Pages publishes exactly the contents of `dist/`: HTML, CSS,
-  the small click-to-load script, and optimized images. Inspect `dist/`
-  after every build (`find dist -type f | sort`) so you know what goes
-  public.
+  the small click-to-load script, and optimized images. The leak check
+  (`npm run check:dist`, the last step of `npm run validate`) fails the
+  build automatically when `dist/` contains anything that must not go
+  public (`.env` files, `.git`/`.github`/`docs` directories, Markdown
+  sources, source maps). For a full listing you can still run
+  `find dist -type f | sort` locally.
 - Images need no separate hosting service; they are built into `dist/` by
   Astro's asset pipeline.
 - Files in `public/` are copied into `dist/` unchanged and served verbatim

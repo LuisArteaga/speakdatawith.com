@@ -50,10 +50,19 @@ The site is then available at `http://localhost:4321`.
 ## Validation
 
 ```bash
-npm run check
+npm run validate
 ```
 
-Runs `astro check` (TypeScript and Astro diagnostics in strict mode).
+The full validation gate, in order: `astro check` (TypeScript and Astro
+diagnostics in strict mode), the production build, and the automated
+`dist/` leak check. `astro check` runs exactly once. CI runs this command
+on every pull request.
+
+Individual steps for targeted runs:
+
+- `npm run check` — `astro check` only
+- `npm run build` — production build only (no type check)
+- `npm run check:dist` — `dist/` leak check only
 
 ## Production build
 
@@ -61,18 +70,19 @@ Runs `astro check` (TypeScript and Astro diagnostics in strict mode).
 npm run build
 ```
 
-Runs `astro check && astro build` and writes the static output to `dist/`.
+Runs `astro build` and writes the static output to `dist/`.
 The build requires no secrets and makes no network requests.
 
-To inspect what would be published:
+The leak check verifies what would be published:
 
 ```bash
-npm run build
-find dist -type f | sort
+npm run check:dist
 ```
 
-Only the files listed by that command are published. If anything unexpected
-appears in `dist/`, it must not be deployed.
+It fails when `dist/` contains anything that must not go public: `.env`
+files, `.git`/`.github`/`docs` directories, Markdown sources (`.md`/`.mdx`),
+or source maps (`.map`). For a full file listing you can still run
+`find dist -type f | sort`.
 
 ## Preview
 
