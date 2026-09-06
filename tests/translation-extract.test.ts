@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { existsSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -56,8 +57,9 @@ describe('extractTranslationModel', () => {
     expect(model.units.some((unit: { text: string }) => unit.text.includes('order_count'))).toBe(false);
     expect(model.protectedContent.codeBlockHashes).toHaveLength(1);
     // sha256 of the fenced block body, so byte-identity is checkable later.
-    expect(model.protectedContent.codeBlockHashes[0]).toMatch(/^[a-f0-9]{64}$/);
-    expect(sqlBody.length).toBeGreaterThan(0);
+    expect(model.protectedContent.codeBlockHashes[0]).toBe(
+      createHash('sha256').update(sqlBody, 'utf8').digest('hex'),
+    );
   });
 
   it('harvests inline code values, URLs, and component names as protected content', () => {

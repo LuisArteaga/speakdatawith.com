@@ -76,9 +76,6 @@ export function parseNumberToken(token, convention) {
     if (convention === 'en' && thousandsPattern.test(token)) {
       return { kind: 'value', value: parseValue(token, convention) };
     }
-    if (convention !== 'en' && commas >= 2 && thousandsPattern.test(token)) {
-      return { kind: 'ambiguous' };
-    }
     return { kind: 'ambiguous' };
   }
   return { kind: 'value', value: parseValue(token, convention) };
