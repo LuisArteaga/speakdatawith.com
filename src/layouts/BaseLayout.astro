@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { buildOgMetadata, buildPageTitle, SITE_NAME } from '../utils/og';
+import { buildNavItems, isNoindexPagePath } from '../utils/navigation';
 
 interface Props {
   title: string;
@@ -29,6 +30,9 @@ const ogMetadata = buildOgMetadata({
   publishedTime,
   modifiedTime,
 });
+
+const navItems = buildNavItems(Astro.url.pathname);
+const noindex = isNoindexPagePath(Astro.url.pathname);
 ---
 
 <!doctype html>
@@ -38,6 +42,7 @@ const ogMetadata = buildOgMetadata({
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonicalUrl.href} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link
@@ -56,9 +61,15 @@ const ogMetadata = buildOgMetadata({
     <header class="site-header">
       <nav aria-label="Main navigation">
         <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/articles/">Articles</a></li>
-          <li><a href="/about/">About</a></li>
+          {
+            navItems.map((item) => (
+              <li>
+                <a href={item.href} aria-current={item.isCurrent ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
         </ul>
       </nav>
     </header>
@@ -66,7 +77,7 @@ const ogMetadata = buildOgMetadata({
       <slot />
     </main>
     <footer class="site-footer">
-      <p>© 2026 SpeakDataWith. <a href="/articles/">Articles</a> · <a href="/rss.xml">RSS</a></p>
+      <p>© 2026 SpeakDataWith. <a href="/articles/">Articles</a> · <a href="/rss.xml">RSS</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></p>
     </footer>
   </body>
 </html>
