@@ -82,8 +82,8 @@ directory is gitignored; none of these files is committed.
 
 ## Public and private boundary
 
-- `content-work/` is gitignored entirely — nothing inside it is ever
-  committed.
+- `content-work/` is gitignored entirely (only the `.gitkeep` directory
+  marker is committed) — no working artifact inside it is ever committed.
 - Publishable material enters the repository only by copying a curated
   snapshot into `docs/editorial/<ID>/` (for example the approved thesis map
   or the final claims audit, in a version worth keeping). The rule is
