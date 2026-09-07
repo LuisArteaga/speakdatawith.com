@@ -1,10 +1,10 @@
 ---
 name: editorial
 description: Produce a site article through the interview-to-evidence editorial workflow — interview the author, map the thesis, classify evidence gaps, research with claim-level traceability, brief, outline, draft, human pass, claims audit. Use when starting or resuming editorial work on an article under content-work/<ID>/, or when the author hands you a topic for a new site article.
-version: "1.0"
+version: "1.1"
 ---
 
-# Editorial skill (v1.0)
+# Editorial skill (v1.1)
 
 This skill is the versioned editorial methodology of this repository: a
 compact router with phase references loaded only when they are needed. The

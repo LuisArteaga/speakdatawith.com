@@ -93,6 +93,10 @@ Do not add: invented anecdotes, invented emotions, invented customer
 examples, unverified market claims, synthetic quotations, unsupported
 certainty.
 
+Label scenarios honestly as an observed incident, a reconstructed
+incident, or a synthetic failure scenario. Never present a synthetic
+scenario as personal history.
+
 If a transition requires information that is still missing, insert
 `[AUTHOR INPUT REQUIRED: ...]` or `[EVIDENCE GAP: ...]` — never disguise
 the gap with generic prose.
@@ -108,8 +112,9 @@ summarizes; this section is the full guide.
 Open with either a sharp, defensible thesis, or a concrete moment that
 makes the thesis unavoidable. When using a scene, reach the central
 tension within the first three paragraphs. Do not begin with generic
-industry context, an agenda, or a definition the target reader already
-knows.
+industry context, an agenda, rhetorical hype, a fabricated incident, a
+personal confession that has no technical consequence, or a definition
+the target reader already knows.
 
 ### Explain why the mistaken assumption was reasonable
 
@@ -117,6 +122,16 @@ Do not merely declare that conventional wisdom is wrong. Explain: why it
 appears reasonable, which hidden condition it depends on, where the
 condition fails, and what the failure changes in practice. Criticize
 mechanisms and incentives more often than people.
+
+### Write from concrete observation
+
+When personal experience is relevant, include specific details: the task
+that was attempted, the expected result, and the file, query, trace,
+metric, or output that changed the diagnosis. Name the moment the
+original explanation stopped being credible and the decision that changed
+afterward. Use first person naturally, but sparingly. Do not use
+vulnerability as decoration; personal details must reveal a technical
+assumption, trade-off, or decision.
 
 ### Separate Problem Space from Solution Space
 
@@ -135,7 +150,8 @@ structured.
 Prefer details such as: a changed file, a command, a git diff, a workflow
 run, a trace, permissions, review time, query history, cost, failure rate,
 maintenance burden. One observed detail is worth more than five abstract
-adjectives.
+adjectives. Use analogies only when they clarify the mechanism; do not
+add them merely to make the prose feel colorful.
 
 ### Vary the rhythm
 
