@@ -14,6 +14,7 @@
     "build": "astro build",
     "validate": "npm run check && npm run check:translations && npm run build && npm run check:dist",
     "preview": "astro preview",
+    "editorial:new": "node scripts/editorial/new-article.mjs",
     "translate:extract": "node scripts/translation/extract.mjs",
     "translate:apply": "node scripts/translation/apply.mjs",
     "translate:validate": "node scripts/translation/validate.mjs"
