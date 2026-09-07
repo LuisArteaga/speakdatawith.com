@@ -122,6 +122,7 @@ the phase the artifacts point to; do not replay earlier phases.
 | Follow-up Interview, Article Brief, Outline, Draft (phases 11–14) | `references/brief-outline-draft.md` |
 | Humanity Interview, Human Pass (phases 15–16) | `references/human-pass.md` |
 | Final Evidence Check / Claims Audit (phase 17) | `references/claims-audit.md` |
+| Handoff into the content pipeline (after the drafting gate) | `references/handoff.md` |
 
 Load exactly one reference file when entering its phase group — never load
 ahead, never keep two phase groups open at once.
