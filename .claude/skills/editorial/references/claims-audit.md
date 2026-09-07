@@ -29,6 +29,5 @@ author's decision, recorded in the audit, never assumed by the session.
 
 When the author confirms the audit, the drafting gate closes. The handoff
 into the content pipeline (creating the `draft: true` English source
-article under `src/content/articles/en/` and its pull request) is defined
-in `docs/editorial/workflow.md` ("Handoff into the content pipeline") and
-is out of scope for this skill.
+article under `src/content/articles/en/` and its pull request) is the next
+step: `references/handoff.md`.

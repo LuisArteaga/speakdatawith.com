@@ -153,6 +153,8 @@ issue records method and required evidence only.
 - German and Spanish versions are produced exclusively through the
   translation workflow (`docs/translation/workflow.md`); the editorial
   lifecycle does not produce them.
+- The operational procedure, including the frontmatter template, is the
+  editorial skill's `references/handoff.md`.
 
 ## Editorial voice (summary)
 
