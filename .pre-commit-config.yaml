@@ -1,0 +1,21 @@
+# Pre-commit hooks from the quality-gates-toolkit, pinned to the immutable
+# release tag v1.3.0 (toolkit decision D-0007) - the same gates that run in
+# CI (see docs/quality-gates.md). The JS hooks invoke this project's npm
+# scripts and require node_modules, i.e. `npm ci` must have run first.
+# Install the hooks with `pre-commit install` (see docs/local-development.md).
+# The toolkit package requires Python >=3.12; pin the hook language so the
+# environments are built with python3.12 regardless of which interpreter the
+# pre-commit installation itself runs under.
+default_language_version:
+  python: python3.12
+repos:
+  - repo: https://github.com/LuisArteaga/quality-gates-toolkit
+    rev: v1.3.0
+    hooks:
+      # Staged-only scan, matching the toolkit's own pre-commit config; the
+      # authoritative full scan over all tracked files is the CI secret-scan
+      # job.
+      - id: secret-scan
+        args: [--staged]
+      - id: js-typecheck
+      - id: js-test

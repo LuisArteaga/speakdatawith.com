@@ -1,9 +1,14 @@
 name: Quality Gates
 
 # Supplementary quality gates from the quality-gates-toolkit, pinned to the
-# immutable release tag v1.0.3 (toolkit decision D-0007). The deterministic
+# immutable release tag v1.3.0 (toolkit decision D-0007). The deterministic
 # site validation (validate-site.yml, added by issue #1) is a separate,
 # parallel gate - these toolkit gates complement it, not replace it.
+#
+# js-typecheck and js-test run this project's npm scripts (toolkit decision
+# D-0012: the harness owns the environment, the project owns the tools).
+# Like secret-scan they need no secrets, so they run on fork PRs too. The
+# toolkit's node-version input defaults to "22", matching .nvmrc.
 
 on:
   pull_request:
@@ -15,7 +20,7 @@ jobs:
     name: secret-scan
     permissions:
       contents: read
-    uses: LuisArteaga/quality-gates-toolkit/.github/workflows/secret-scan.yml@v1.0.3
+    uses: LuisArteaga/quality-gates-toolkit/.github/workflows/secret-scan.yml@v1.3.0
 
   llm-pr-review:
     name: llm-pr-review
@@ -25,10 +30,22 @@ jobs:
     # Fork PRs: repository secrets are unavailable there, so the review job
     # is skipped cleanly instead of failing. secret-scan still runs on forks.
     if: github.event.pull_request.head.repo.full_name == github.repository
-    uses: LuisArteaga/quality-gates-toolkit/.github/workflows/llm-pr-review.yml@v1.0.3
+    uses: LuisArteaga/quality-gates-toolkit/.github/workflows/llm-pr-review.yml@v1.3.0
     with:
       config-path: config/factory.json
       diff-exclude: package-lock.json
     secrets:
       openrouter-api-key: ${{ secrets.OPENROUTER_API_KEY }}
       judge-token: ${{ secrets.JUDGE_GH_TOKEN }}
+
+  js-typecheck:
+    name: js-typecheck
+    permissions:
+      contents: read
+    uses: LuisArteaga/quality-gates-toolkit/.github/workflows/js-typecheck.yml@v1.3.0
+
+  js-test:
+    name: js-test
+    permissions:
+      contents: read
+    uses: LuisArteaga/quality-gates-toolkit/.github/workflows/js-test.yml@v1.3.0

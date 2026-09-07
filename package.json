@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "check": "astro check",
+    "typecheck": "astro check",
     "check:dist": "node scripts/check-dist.mjs",
     "check:translations": "node scripts/translation/check-collection.mjs",
     "test": "vitest run",
