@@ -108,3 +108,10 @@ becomes public, so the decision to snapshot is deliberate and reviewable.
 Raw interview notes and the author language bank are never snapshotted
 without explicit approval.
 _Avoid_: copy, export
+
+**Editorial Voice**:
+The register in which the site's articles are written: openings built
+from tension rather than templates, mechanism-first explanation,
+concrete operational observation, clear positions with explicit
+conditions, and endings that hand the reader a decision.
+_Avoid_: writing style, brand voice

@@ -70,17 +70,18 @@ using this checklist:
 4. Correct emotional intensity to match the author's account.
 5. Add approved uncertainty, hesitation, humor, or frustration where it
    changed the interpretation.
-6. Remove invented confidence.
+6. Replace generic confidence with evidence.
 7. Remove invented vulnerability.
 8. Remove framework names that do not add reusable value.
 9. Combine unnecessarily fragmented one-line paragraphs.
 10. Remove repeated rhetorical sentence patterns.
-11. Preserve facts, numbers, code, citations, and limitations.
-12. Ensure personal details have technical or decision-making relevance.
-13. Ensure the opening sounds like a practitioner who noticed something,
+11. Remove transitions that merely announce the next section.
+12. Preserve facts, numbers, code, citations, and limitations.
+13. Ensure personal details have technical or decision-making relevance.
+14. Ensure the opening sounds like a practitioner who noticed something,
     not a keynote speaker performing certainty.
-14. Ensure the ending reflects the author's actual decision.
-15. Read the text aloud for unnatural cadence.
+15. Ensure the ending reflects the author's actual decision.
+16. Read the text aloud for unnatural cadence.
 
 Do not make the text "more human" by adding: fictional memories, invented
 dialogue, exaggerated emotions, fake customer stories, arbitrary jokes, or
