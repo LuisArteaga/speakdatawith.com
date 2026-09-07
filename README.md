@@ -25,6 +25,8 @@ Detailed documentation lives in [`docs/`](docs/):
 | [`docs/architecture.md`](docs/architecture.md) | Architecture and technology decisions |
 | [`docs/content-schema.md`](docs/content-schema.md) | Article frontmatter schema |
 | [`docs/multilingual-architecture.md`](docs/multilingual-architecture.md) | Multilingual publishing model (EN/DE/ES) |
+| [`docs/editorial/workflow.md`](docs/editorial/workflow.md) | Editorial workflow: from topic to published English source |
+| [`docs/translation/workflow.md`](docs/translation/workflow.md) | Translation workflow for German and Spanish |
 | [`docs/image-guidelines.md`](docs/image-guidelines.md) | Image formats, sizes, and handling |
 | [`docs/local-development.md`](docs/local-development.md) | Local development guide |
 | [`docs/github-repository-settings.md`](docs/github-repository-settings.md) | Manual GitHub repository settings |
@@ -111,11 +113,12 @@ required frontmatter and the translation rules are documented in
 [`docs/multilingual-architecture.md`](docs/multilingual-architecture.md).
 
 A new article starts with `npm run editorial:new "<topic>"`: it allocates
-the next free editorial ID (the language-neutral `translationKey`,
-`SDW-001`, …), scaffolds the private working artifacts under
-`content-work/<ID>/` (gitignored, ADR-0003), and prints the gate checklist
-seed for the article's `[CONTENT]` issue. The editorial lifecycle is
-documented in [`docs/editorial/workflow.md`](docs/editorial/workflow.md).
+the article's Translation Key (the language-neutral `SDW-001`, …),
+scaffolds the private working artifacts under `content-work/<ID>/`
+(gitignored, ADR-0003), and prints the gate checklist seed for the
+article's `[CONTENT]` issue. How to start, drive, and resume an article is
+described in [`docs/editorial/workflow.md`](docs/editorial/workflow.md)
+("Working with this workflow").
 
 ## Images
 
