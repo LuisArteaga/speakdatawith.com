@@ -36,9 +36,10 @@ reviewers.
 
 ## How the quality gates fit in
 
-In addition to `validate-site`, two supplementary gates from the
+In addition to `validate-site`, four supplementary gates from the
 [quality-gates-toolkit](https://github.com/LuisArteaga/quality-gates-toolkit)
-run on every pull request (secret scan and LLM-based review; see
+run on every pull request (secret scan, LLM-based review, and the JavaScript
+gates `js-typecheck`/`js-test`; see
 `docs/quality-gates.md`). They are not required status checks; the only
 required check is `validate-site`.
 
@@ -68,4 +69,4 @@ workflow. This applies to:
 
 - `.github/workflows/validate-site.yml`
 - the toolkit workflow references in `.github/workflows/quality-gates.yml`
-  (pinned to the toolkit's immutable release tag `v1.0.3`)
+  (pinned to the toolkit's immutable release tag `v1.3.0`)

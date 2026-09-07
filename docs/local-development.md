@@ -38,10 +38,11 @@ npm run validate
 ```
 
 The full gate, in order: `astro check` (TypeScript strict mode plus Astro
-diagnostics), the production build, and the automated `dist/` leak check.
+diagnostics), the translation integrity check over the whole article
+collection, the production build, and the automated `dist/` leak check.
 `astro check` runs exactly once. CI runs the same command on every pull
 request. The steps can also be run individually: `npm run check`,
-`npm run build`, `npm run check:dist`.
+`npm run check:translations`, `npm run build`, `npm run check:dist`.
 
 ## Test
 
@@ -57,6 +58,40 @@ Open Graph metadata construction, navigation), the article frontmatter
 schema in `src/schemas/article.ts`, and the UI dictionaries in
 `src/i18n/`. CI runs them on every pull request as part of the
 `validate-site` workflow.
+
+## Pre-commit hooks
+
+The repository ships a [pre-commit](https://pre-commit.com) configuration
+(`.pre-commit-config.yaml`) with three hooks from the
+[quality-gates-toolkit](https://github.com/LuisArteaga/quality-gates-toolkit),
+pinned to release `v1.3.0`:
+
+| Hook | What it does |
+|---|---|
+| `secret-scan` | Best-effort secret scan over the staged changes |
+| `js-typecheck` | `npm run typecheck` (the full project) |
+| `js-test` | `npm test` (the full project) |
+
+The JS hooks invoke the project's npm scripts and run full-project — not
+staged-scoped — so they require the dependencies to be installed
+(`npm ci`) before the first commit. The `secret-scan` hook environment is
+built with Python 3.12 (pinned via `default_language_version` in
+`.pre-commit-config.yaml`, because the toolkit package requires Python
+≥ 3.12). With [pre-commit](https://pre-commit.com) installed:
+
+```bash
+pre-commit install
+```
+
+After that, `git commit` runs the hooks on every commit. The full-project JS
+hooks make a commit take a little while. To run everything on demand:
+
+```bash
+pre-commit run --all-files
+```
+
+The same gates run in CI on every pull request (see
+[`docs/quality-gates.md`](quality-gates.md)).
 
 ## Production build
 

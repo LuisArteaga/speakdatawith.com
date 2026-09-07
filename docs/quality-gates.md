@@ -1,15 +1,27 @@
 # Quality Gates
 
-This repository runs two quality gates from the
+This repository runs four quality gates from the
 [quality-gates-toolkit](https://github.com/LuisArteaga/quality-gates-toolkit)
-(pinned to release `v1.0.3`), configured in
+(pinned to release `v1.3.0`), configured in
 [`.github/workflows/quality-gates.yml`](../.github/workflows/quality-gates.yml).
-Both jobs run in parallel on every pull request targeting `main`.
+All four jobs run in parallel on every pull request targeting `main`.
 
 | Gate | Toolkit workflow | What it does |
 |---|---|---|
-| `secret-scan` | `secret-scan.yml@v1.0.3` | Language-agnostic secret scanner (pure stdlib) over all tracked files. Runs on every PR, including fork PRs. |
-| `llm-pr-review` | `llm-pr-review.yml@v1.0.3` | Diff-based LLM review by four judges; posts a review containing the versioned `llm-pr-review-verdicts` block (toolkit decision D-0002). |
+| `secret-scan` | `secret-scan.yml@v1.3.0` | Language-agnostic secret scanner (pure stdlib) over all tracked files. Runs on every PR, including fork PRs. |
+| `llm-pr-review` | `llm-pr-review.yml@v1.3.0` | Diff-based LLM review by four judges; posts a review containing the versioned `llm-pr-review-verdicts` block (toolkit decision D-0002). |
+| `js-typecheck` | `js-typecheck.yml@v1.3.0` | Runs this project's `npm run typecheck` script, which aliases `astro check` (toolkit decision D-0012: the harness owns the environment — Node runtime, `npm ci`, dependency cache — while the project owns the tools). Needs no secrets, so it runs on fork PRs too. |
+| `js-test` | `js-test.yml@v1.3.0` | Runs this project's `npm test` script (Vitest) under the same harness contract. Needs no secrets, so it runs on fork PRs too. |
+
+The JS gate jobs rely on the toolkit's `node-version` input default (`"22"`),
+which matches `.nvmrc`; no Node version is duplicated in the workflow.
+
+`js-typecheck` and `js-test` intentionally re-run steps that `validate-site`
+already executes (`astro check`, `npm test`). The duplication is the cost of
+consuming the toolkit's gate family as an independent contract; `validate-site`
+remains the required status check and stays untouched.
+
+The same gates run locally as [pre-commit hooks](local-development.md#pre-commit-hooks).
 
 The Python-specific toolkit workflows (`pr-checks`, `lint`, `test`,
 `diff-coverage`, `security`) are not wired up: this is an Astro/npm project,
@@ -57,6 +69,8 @@ alongside these supplementary toolkit gates.
 
 ## Upgrades
 
-Both `uses:` references pin the exact toolkit release tag (`v1.0.3`); there is
-no floating ref. Upgrades happen as a deliberate commit that bumps both pins
-to the new tag (toolkit decision D-0007).
+The `uses:` references in the workflow and the `rev` pin in
+[`.pre-commit-config.yaml`](../.pre-commit-config.yaml) pin the exact toolkit
+release tag (`v1.3.0`); there is no floating ref. Upgrades happen as a
+deliberate commit that bumps all pins to the new tag (toolkit decision
+D-0007).
