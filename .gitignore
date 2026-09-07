@@ -11,3 +11,8 @@ dist/
 # directory marker itself is committed.
 translation-work/*
 !translation-work/.gitkeep
+
+# Private editorial working artifacts (ADR-0003); only the
+# directory marker itself is committed.
+content-work/*
+!content-work/.gitkeep
