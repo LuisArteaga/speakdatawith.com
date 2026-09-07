@@ -14,8 +14,9 @@ _Avoid_: post, page
 **Translation Key**:
 The stable identifier of an article across all of its language versions
 (`SDW-<digits>`, e.g. `SDW-001`). Every language version of the same article
-shares it.
-_Avoid_: content ID, article ID
+shares it. An article carries it from the moment editorial work begins,
+before any language version exists.
+_Avoid_: content ID, article ID, editorial ID
 
 **Content ID**:
 The stable identifier of one language version of an article
@@ -59,3 +60,51 @@ visual review during development. It exists outside the content model: it
 is not an Article, has no language versions or translation status, and is
 never published to the live site.
 _Avoid_: test page, demo page, kitchen sink
+
+## Editorial Workflow
+
+**Working Artifact**:
+A private file that carries one article's state through the editorial
+lifecycle — interview summaries, the thesis map, the evidence
+classification, drafts, and audits. Working artifacts are the article's
+only authoritative state; nothing outside them records editorial progress.
+They are never published directly; publishable material becomes public
+only as a Curated Snapshot.
+_Avoid_: scratch file, session notes
+
+**Editorial Gate**:
+A human confirmation point between two phases of the editorial lifecycle.
+Every lifecycle transition is one: work never continues past an Editorial
+Gate without the author's explicit confirmation. Distinct from quality
+gates — the deterministic checks that run against repository changes.
+_Avoid_: quality gate, CI gate
+
+**Content Issue**:
+The single public tracker ticket that accompanies one article through the
+editorial lifecycle. It records the article's status, topic, primary
+reader, experience source, and the Editorial Gate checklist — actionable
+content only. Hypotheses and verbatim interview material stay in the
+Working Artifacts.
+_Avoid_: epic, umbrella issue
+
+**Evidence Gap**:
+A claim in the emerging article that lacks support, classified during gap
+analysis as observed, reproducible, externally verifiable, interpretive,
+unknown, or private. Every gap is either closed by evidence or explicitly
+waived before drafting.
+_Avoid_: open question, TODO
+
+**Evidence Issue**:
+A public tracker ticket that closes exactly one Evidence Gap. It records
+the method (research, experiment, interview), the required evidence, and
+the acceptance criteria — never the author's hypothesis. It closes on its
+own definition of done, independently of the article's pull request.
+_Avoid_: research ticket, backlog item
+
+**Curated Snapshot**:
+An explicitly approved copy of Working Artifact material placed into the
+public documentation. It is the only path by which editorial material
+becomes public, so the decision to snapshot is deliberate and reviewable.
+Raw interview notes and the author language bank are never snapshotted
+without explicit approval.
+_Avoid_: copy, export

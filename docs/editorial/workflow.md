@@ -7,6 +7,44 @@ pipeline. The decision record for this workflow is
 [ADR-0003](../adr/0003-editorial-workflow-with-private-working-artifacts.md);
 detailed phase instructions live in the editorial skill's reference files.
 
+## Working with this workflow
+
+This section orients the author; the sections below are the binding
+contract.
+
+1. **You are the author and the only decision-maker.** The editorial skill
+   (`.claude/skills/editorial/`) executes the methodology in a session — it
+   interviews, structures, and drafts, and you confirm at every Editorial
+   Gate. Article state lives exclusively in the Working Artifacts under
+   `content-work/<ID>/`.
+2. **Start a new article** with `npm run editorial:new "<topic>"`. The
+   script allocates the article's Translation Key (scanning both
+   `content-work/` and `src/content/articles/` for the next free ID),
+   scaffolds the artifact files with template headers, and prints the gate
+   checklist seed. Open the article's `[CONTENT]` issue from that seed.
+3. **Drive the work in sessions.** Ask a session to start or resume
+   editorial work on the article (for example, "start editorial work on
+   SDW-001"). The skill loads exactly one phase reference at a time and
+   ends every phase with a summary, the open questions, and the Editorial
+   Gate question for you. Phase instructions live in the skill's reference
+   files.
+4. **Resume any time.** A fresh session reads `content-work/<ID>/` and
+   reports the current lifecycle phase, the confirmed gates, and the open
+   questions. The Working Artifacts are the only state; no session history
+   is authoritative.
+5. **Close evidence gaps between sessions.** Each Evidence Gap becomes an
+   Evidence Issue with its method, required evidence, and acceptance
+   criteria; research and experiments run outside the interview, and the
+   research ledger records what closed each gap.
+6. **Hand off and publish deliberately.** After the drafting gate and the
+   claims audit, the handoff creates the English source article with
+   `draft: true`; the pull request closes the `[CONTENT]` issue.
+   Publication is the separate, manual `draft: false` flip. German and
+   Spanish versions are produced exclusively through the translation
+   workflow — the editorial lifecycle is English-only.
+
+Each step is defined in full by the sections that follow.
+
 ## Core rule
 
 Interview before producing. No thesis before the author's experience is
@@ -43,8 +81,9 @@ of each phase:
 
 ## Gates
 
-Every lifecycle transition is a human gate, mirrored by the checklist in the
-article's `[CONTENT]` issue. Stop and ask the author before continuing when:
+Every lifecycle transition is an Editorial Gate, mirrored by the checklist
+in the article's `[CONTENT]` issue. Stop and ask the author before
+continuing when:
 
 - the thesis is unclear,
 - the author's opinion is contradictory,
@@ -61,10 +100,10 @@ Momentum is never rewarded over accuracy.
 
 ## Working artifacts
 
-Working artifacts live in `content-work/<ID>/`, where `<ID>` is the article's
-language-neutral editorial ID in the existing `translationKey` format
-(`SDW-001`, `SDW-002`, …), allocated by `npm run editorial:new`. The
-directory is gitignored; none of these files is committed.
+Working artifacts live in `content-work/<ID>/`, where `<ID>` is the
+article's Translation Key (`SDW-001`, `SDW-002`, …), allocated by
+`npm run editorial:new`. The directory is gitignored; none of these files
+is committed.
 
 | File | Purpose |
 | --- | --- |
@@ -126,16 +165,6 @@ clarifies whether you are right. Each evidence issue records:
 
 The author's current hypothesis stays in the private gap analysis; the public
 issue records method and required evidence only.
-
-## Starting and resuming
-
-- **New article:** `npm run editorial:new "<topic>"` allocates the next free
-  ID (scanning both `content-work/` and `src/content/articles/`), scaffolds
-  the artifact files with template headers, and prints the gate checklist
-  seed for the `[CONTENT]` issue.
-- **Every session** starts by reading `content-work/<ID>/` and reporting the
-  current lifecycle phase, the confirmed gates, and the open questions.
-  Article state lives in these files; no session history is authoritative.
 
 ## Handoff into the content pipeline
 

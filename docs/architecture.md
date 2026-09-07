@@ -82,7 +82,10 @@ published English source. Excluded articles therefore never produce a
 public page and never appear in an RSS feed or the sitemap.
 The future-date rule is clock-injectable (`now` parameter) so it stays
 unit-testable. The full translation publication model is described in
-`docs/multilingual-architecture.md`.
+`docs/multilingual-architecture.md`. English source articles originate
+from the editorial workflow (`docs/editorial/workflow.md`): they enter the
+repository through its handoff as `draft: true` and are released by the
+manual `draft: false` flip described there.
 
 ## TypeScript 6.0.3 pin
 
