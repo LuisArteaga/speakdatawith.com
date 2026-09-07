@@ -52,3 +52,10 @@ The version counter (`sourceRevision`) of a source article, incremented on
 every substantive English content change. A translation may only be
 published when its revision matches its source article's.
 _Avoid_: version, build number
+
+**Styleguide Page**:
+A local-only specimen page that exhibits every design-system element for
+visual review during development. It exists outside the content model: it
+is not an Article, has no language versions or translation status, and is
+never published to the live site.
+_Avoid_: test page, demo page, kitchen sink
