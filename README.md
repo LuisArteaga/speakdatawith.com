@@ -110,6 +110,13 @@ required frontmatter and the translation rules are documented in
 [`docs/content-schema.md`](docs/content-schema.md) and
 [`docs/multilingual-architecture.md`](docs/multilingual-architecture.md).
 
+A new article starts with `npm run editorial:new "<topic>"`: it allocates
+the next free editorial ID (the language-neutral `translationKey`,
+`SDW-001`, …), scaffolds the private working artifacts under
+`content-work/<ID>/` (gitignored, ADR-0003), and prints the gate checklist
+seed for the article's `[CONTENT]` issue. The editorial lifecycle is
+documented in [`docs/editorial/workflow.md`](docs/editorial/workflow.md).
+
 ## Images
 
 - `src/assets/brand/` for logo and brand material
