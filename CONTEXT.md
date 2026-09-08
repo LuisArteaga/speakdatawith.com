@@ -79,6 +79,15 @@ Gate without the author's explicit confirmation. Distinct from quality
 gates — the deterministic checks that run against repository changes.
 _Avoid_: quality gate, CI gate
 
+**Checkpoint**:
+The mandatory persistence step at every confirmed Editorial Gate: approved
+summaries into the Working Artifacts, raw dictated material into the
+private transcript artifact, the session-resume state updated, and the
+Content Issue checklist mirrored — then the author explicitly chooses to
+continue in-session or end the session. A session ends without losing
+approved state only when the Checkpoint ran.
+_Avoid_: autosave, session save
+
 **Content Issue**:
 The single public tracker ticket that accompanies one article through the
 editorial lifecycle. It records the article's status, topic, primary

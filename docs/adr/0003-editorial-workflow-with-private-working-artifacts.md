@@ -1,5 +1,14 @@
 # Editorial workflow with private working artifacts and gated publication
 
+> **Status:** Amended 2026-09 while implementing the phase checkpoint
+> protocol: LLM-assisted sessions have a practical context budget far below
+> the advertised model context window, so multi-session operation is
+> first-class, not an emergency measure. Two artifacts joined the private
+> working set — `status.md` (machine-readable session-resume state, updated
+> at every Editorial Gate checkpoint) and `interview-transcript-raw.md`
+> (verbatim dictated interview material, never published). The decision and
+> rationale below are unchanged.
+
 Articles on this site are produced through an interview-to-evidence
 methodology: every article starts from the author's first-hand experience, is
 interviewed into a thesis map, has every claim classified into an evidence gap

@@ -2,9 +2,12 @@
  * Tests for the editorial bootstrap script (`npm run editorial:new`,
  * issue #29): ID allocation over both sources (`content-work/` directories
  * and article frontmatter `translationKey` values), the collision abort,
- * the eleven-file scaffold with its standard headers, the gate checklist
- * seed, and the CLI end-to-end behavior. All workspaces are throwaway
- * mkdtemp directories outside the productive collections.
+ * the thirteen-file scaffold with its standard headers, the gate checklist
+ * seed, and the CLI end-to-end behavior. A parity block (issue #40) pins
+ * the artifact set to the workflow contract: the scaffold must match the
+ * `docs/editorial/workflow.md` table and name every artifact in the skill
+ * router. All workspaces are throwaway mkdtemp directories outside the
+ * productive collections.
  */
 
 import { spawnSync } from 'node:child_process';
@@ -180,13 +183,13 @@ describe('scaffoldArticleWorkspace', () => {
     }
   });
 
-  it('creates exactly the eleven artifact files', () => {
+  it('creates exactly the thirteen artifact files', () => {
     makeWorkspace();
     const writtenPaths = scaffoldArticleWorkspace({ workDir: contentWork(), id: 'SDW-001', topic: 'Interviews first' });
 
-    expect(writtenPaths).toHaveLength(11);
+    expect(writtenPaths).toHaveLength(13);
     const fileNames = readdirSync(join(contentWork(), 'SDW-001')).sort();
-    expect(fileNames).toHaveLength(11);
+    expect(fileNames).toHaveLength(13);
     expect(fileNames).toEqual(ARTIFACT_FILES.map((artifact) => artifact.file).sort());
   });
 
@@ -233,14 +236,14 @@ describe('scaffoldArticleWorkspace', () => {
     makeWorkspace();
     rmSync(contentWork(), { recursive: true, force: true });
     const writtenPaths = scaffoldArticleWorkspace({ workDir: contentWork(), id: 'SDW-001', topic: 't' });
-    expect(writtenPaths).toHaveLength(11);
+    expect(writtenPaths).toHaveLength(13);
   });
 });
 
 describe('buildScaffoldFiles', () => {
   it('is pure and embeds the topic only into topic.md', () => {
     const files = buildScaffoldFiles('SDW-042', 'Data quality gates');
-    expect(files).toHaveLength(11);
+    expect(files).toHaveLength(13);
     const topicFile = files.find((file) => file.file === 'topic.md');
     expect(topicFile?.content).toContain('Provisional topic: Data quality gates');
     expect(topicFile?.content).toContain('SDW-042');
@@ -267,6 +270,58 @@ describe('buildGateChecklistSeed', () => {
   });
 });
 
+describe('artifact set parity with the workflow contract (issue #40)', () => {
+  const workflowPath = join(REPO_ROOT, 'docs', 'editorial', 'workflow.md');
+  const skillPath = join(REPO_ROOT, '.claude', 'skills', 'editorial', 'SKILL.md');
+
+  interface WorkflowRow {
+    file: string;
+    purpose: string;
+  }
+
+  function workflowArtifactTable(): WorkflowRow[] {
+    const source = readFileSync(workflowPath, 'utf8');
+    const section = source.split('## Working artifacts')[1] ?? '';
+    const rows: WorkflowRow[] = [];
+    for (const line of section.split('\n')) {
+      const match = /^\| `([a-z0-9.-]+\.md)` \| (.+) \|$/u.exec(line.trim());
+      if (match) {
+        rows.push({ file: match[1], purpose: match[2] });
+      }
+    }
+    return rows;
+  }
+
+  it('matches the workflow.md working-artifacts table in names, purposes, and order', () => {
+    const rows = workflowArtifactTable();
+    expect(rows).toHaveLength(13);
+    expect(rows.map((row) => row.file)).toEqual(ARTIFACT_FILES.map((artifact) => artifact.file));
+    ARTIFACT_FILES.forEach((artifact, index) => {
+      // The table lowercases the first letter and drops the trailing period;
+      // the scaffold header capitalizes it.
+      const normalized = artifact.purpose.replace(/^./u, (c) => c.toLowerCase()).replace(/\.$/u, '');
+      expect(normalized).toBe(rows[index].purpose);
+    });
+  });
+
+  it('names every artifact in the skill router', () => {
+    const skill = readFileSync(skillPath, 'utf8');
+    for (const artifact of ARTIFACT_FILES) {
+      expect(skill).toContain(`\`${artifact.file}\``);
+    }
+  });
+
+  it('scaffolds the checkpoint artifacts with the hand-made first-instance headers', () => {
+    const files = buildScaffoldFiles('SDW-007', 't');
+    const status = files.find((file) => file.file === 'status.md');
+    const transcript = files.find((file) => file.file === 'interview-transcript-raw.md');
+    expect(status?.content.startsWith('# Status\n')).toBe(true);
+    expect(status?.content).toContain('session-resume state');
+    expect(transcript?.content.startsWith('# Interview Transcript (Raw)\n')).toBe(true);
+    expect(transcript?.content).toContain('Verbatim dictated interview material');
+  });
+});
+
 describe('editorial:new CLI', () => {
   afterEach(() => {
     if (root !== '') {
@@ -281,7 +336,7 @@ describe('editorial:new CLI', () => {
 
     expect(cli.status).toBe(0);
     expect(cli.stdout).toContain('Allocated editorial ID SDW-001');
-    expect(readdirSync(join(contentWork(), 'SDW-001'))).toHaveLength(11);
+    expect(readdirSync(join(contentWork(), 'SDW-001'))).toHaveLength(13);
     for (const item of GATE_CHECKLIST_ITEMS) {
       expect(cli.stdout).toContain(`- [ ] ${item}`);
     }

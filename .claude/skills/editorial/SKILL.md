@@ -1,10 +1,10 @@
 ---
 name: editorial
 description: Produce a site article through the interview-to-evidence editorial workflow — interview the author, map the thesis, classify evidence gaps, research with claim-level traceability, brief, outline, draft, human pass, claims audit. Use when starting or resuming editorial work on an article under content-work/<ID>/, or when the author hands you a topic for a new site article.
-version: "1.1"
+version: "1.2"
 ---
 
-# Editorial skill (v1.1)
+# Editorial skill (v1.2)
 
 This skill is the versioned editorial methodology of this repository: a
 compact router with phase references loaded only when they are needed. The
@@ -70,6 +70,27 @@ continuing when:
 
 Momentum is never rewarded over accuracy.
 
+## Phase checkpoints
+
+A gate confirmation is only complete once everything a cold restart needs
+is persisted. At every Editorial Gate, before any further work:
+
+1. write the approved summaries to the Working Artifacts — nothing
+   approved stays in conversation history only;
+2. persist dictated material verbatim in
+   `content-work/<ID>/interview-transcript-raw.md` — exactly as spoken,
+   repetitions and half sentences preserved as-is; the artifact is private
+   and never published;
+3. update `content-work/<ID>/status.md` — current phase, confirmed gates,
+   open questions, next entry point;
+4. mirror the confirmed items in the `[CONTENT]` issue checklist;
+5. ask you: continue in this session, or end it here?
+
+The default is one phase group per session. A session that completes
+Research / Experiments — or any phase group that loaded large external
+material — ends at its Editorial Gate; continuing in-session is your
+explicit opt-in.
+
 ## Interaction style
 
 - Ask three to five substantive questions per round; prioritize follow-up
@@ -86,11 +107,12 @@ Momentum is never rewarded over accuracy.
 
 ## Working artifacts and privacy
 
-Article state lives only in the eleven artifacts under `content-work/<ID>/`:
-`topic.md`, `interview-notes.md`, `author-language-bank.md`,
-`thesis-map.md`, `gap-analysis.md`, `research-ledger.md`,
-`article-brief.md`, `outline.md`, `draft.md`, `humanity-interview.md`,
-`claims-audit.md` (purposes: `docs/editorial/workflow.md`). The directory
+Article state lives only in the thirteen artifacts under `content-work/<ID>/`:
+`status.md`, `topic.md`, `interview-notes.md`,
+`interview-transcript-raw.md`, `author-language-bank.md`, `thesis-map.md`,
+`gap-analysis.md`, `research-ledger.md`, `article-brief.md`, `outline.md`,
+`draft.md`, `humanity-interview.md`, `claims-audit.md` (purposes:
+`docs/editorial/workflow.md`). The directory
 is gitignored; nothing inside it is ever committed.
 
 - **Privacy boundary:** publishable material reaches the repository only by
@@ -106,10 +128,11 @@ is gitignored; nothing inside it is ever committed.
 
 ## Starting and resuming
 
-Every session starts by reading `content-work/<ID>/` and reporting the
-current lifecycle phase, the confirmed gates, and the open questions. The
-artifacts are the only state — no session history is authoritative. Resume
-the phase the artifacts point to; do not replay earlier phases.
+Every session starts by reading `content-work/<ID>/status.md` and
+reporting the current lifecycle phase, the confirmed gates, and the open
+questions. The artifacts are the only state — no session history is
+authoritative. Resume the phase `status.md` points to; do not replay
+earlier phases.
 
 ## Phase references — load only what the current phase needs
 

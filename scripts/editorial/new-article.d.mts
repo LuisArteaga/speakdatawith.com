@@ -18,7 +18,7 @@ export interface ScaffoldFile {
 /** The editorial ID pattern: the Translation Key pattern from ADR-0001. */
 export const EDITORIAL_ID_PATTERN: RegExp;
 
-/** The eleven working artifacts, in scaffold order (workflow.md table). */
+/** The thirteen working artifacts, in scaffold order (workflow.md table). */
 export const ARTIFACT_FILES: readonly ArtifactSpec[];
 
 /** The drafting-gate checklist items, verbatim from workflow.md. */
