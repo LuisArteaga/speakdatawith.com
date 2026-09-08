@@ -297,10 +297,14 @@ describe('artifact set parity with the workflow contract (issue #40)', () => {
     expect(rows).toHaveLength(13);
     expect(rows.map((row) => row.file)).toEqual(ARTIFACT_FILES.map((artifact) => artifact.file));
     ARTIFACT_FILES.forEach((artifact, index) => {
-      // The table lowercases the first letter and drops the trailing period;
-      // the scaffold header capitalizes it.
-      const normalized = artifact.purpose.replace(/^./u, (c) => c.toLowerCase()).replace(/\.$/u, '');
-      expect(normalized).toBe(rows[index].purpose);
+      // Both sides normalize identically: the workflow table writes
+      // purposes as sentence fragments with a lowercase first letter and
+      // no trailing period, the scaffold headers capitalize them and end
+      // with one. Normalizing BOTH sides pins names, purposes, and order
+      // without pinning that casing split in either direction.
+      const normalize = (purpose: string): string =>
+        purpose.replace(/^./u, (c) => c.toLowerCase()).replace(/\.$/u, '');
+      expect(normalize(artifact.purpose)).toBe(normalize(rows[index].purpose));
     });
   });
 
