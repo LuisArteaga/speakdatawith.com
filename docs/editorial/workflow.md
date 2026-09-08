@@ -28,10 +28,11 @@ contract.
    ends every phase with a summary, the open questions, and the Editorial
    Gate question for you. Phase instructions live in the skill's reference
    files.
-4. **Resume any time.** A fresh session reads `content-work/<ID>/` and
-   reports the current lifecycle phase, the confirmed gates, and the open
-   questions. The Working Artifacts are the only state; no session history
-   is authoritative.
+4. **Resume any time.** A fresh session reads `content-work/<ID>/status.md`
+   first and reports the current lifecycle phase, the confirmed gates, and
+   the open questions. The Working Artifacts are the only state; no session
+   history is authoritative. Work packs as one phase group per session by
+   default ("Phase checkpoints").
 5. **Close evidence gaps between sessions.** Each Evidence Gap becomes an
    Evidence Issue with its method, required evidence, and acceptance
    criteria; research and experiments run outside the interview, and the
@@ -79,6 +80,41 @@ of each phase:
 4. recommend the next step,
 5. wait for confirmation before moving on.
 
+Each confirmation is an Editorial Gate, and every confirmed gate triggers
+the phase checkpoint (next section) before work continues.
+
+## Phase checkpoints
+
+An Editorial Gate confirmation is only complete when the session has
+persisted everything a cold restart needs. At every Editorial Gate, as
+part of the confirmation and before any further work, the session MUST:
+
+1. **Write approved summaries to the Working Artifacts** — round summaries
+   into `interview-notes.md`, decisions into their artifacts; nothing
+   approved stays in conversation history only.
+2. **Persist raw dictated material verbatim** into
+   `interview-transcript-raw.md` — the author's dictation exactly as
+   spoken, with repetitions and half sentences preserved as-is. This
+   artifact is private and never published; it feeds drafting, the
+   humanity pass, and the claims audit, which may quote only wording
+   actually provided.
+3. **Update `status.md`** — current phase, confirmed gates, open questions,
+   next entry point. `status.md` is the source of truth for resuming; a
+   fresh session reads it first.
+4. **Mirror the gate checklist** in the article's `[CONTENT]` issue — tick
+   the confirmed items. The issue is the public mirror; raw dictated
+   material never enters it.
+5. **Ask the author: continue in this session or end it here.** Ending at
+   the gate loses nothing once steps 1–4 are done; that is the point.
+
+### Session packing
+
+The default is one phase group per session. A session that completes the
+Research / Experiments group — or any phase group that loaded large
+external material — ends at its Editorial Gate: context accumulated there
+degrades everything after it. Continuing in-session is an explicit author
+opt-in, never the default.
+
 ## Gates
 
 Every lifecycle transition is an Editorial Gate, mirrored by the checklist
@@ -107,8 +143,10 @@ is committed.
 
 | File | Purpose |
 | --- | --- |
+| `status.md` | machine-readable session-resume state: current phase, confirmed gates, open questions, next entry point |
 | `topic.md` | provisional problem, open ambiguities, intended reader |
 | `interview-notes.md` | approved round summaries of the experience and humanity interviews |
+| `interview-transcript-raw.md` | verbatim dictated interview material; feeds drafting, the humanity pass, and the claims audit |
 | `author-language-bank.md` | the author's actual wording, recovered verbatim |
 | `thesis-map.md` | decision, primary reader, trigger, current thesis, conventional assumption, failure mechanism, confidence |
 | `gap-analysis.md` | every claim classified: observed, reproducible, externally verifiable, interpretive, unknown, or private |
@@ -127,8 +165,9 @@ is committed.
   snapshot into `docs/editorial/<ID>/` (for example the approved thesis map
   or the final claims audit, in a version worth keeping). The rule is
   mechanical: **everything under `docs/` is public** — check before copying.
-- Raw interview notes and the author language bank are not published, even
-  in curated form, without explicit approval.
+- Raw interview notes, the raw interview transcript, and the author
+  language bank are not published, even in curated form, without explicit
+  approval.
 - The issue tracker carries actionable content only (next section);
   hypotheses and verbatim interview material stay out of issues.
 
@@ -137,7 +176,8 @@ is committed.
 One `[CONTENT]` issue per article (title: `[CONTENT] SDW-001 — Working
 title`) holds:
 
-- **Status** — the current lifecycle phase,
+- **Status** — the current lifecycle phase, mirrored from the article's
+  private `status.md`,
 - **Topic** and **Primary reader**,
 - **Experience source** — observed incident, reconstructed incident,
   synthetic failure scenario, or analytical essay without incident,

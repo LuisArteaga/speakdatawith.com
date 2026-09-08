@@ -102,9 +102,12 @@ and distinctions the author considers important. Record them in
 (words the author rejects). Only store language the author actually used
 or explicitly approved; never manufacture quotations.
 
-Write each round's approved summary to
-`content-work/<ID>/interview-notes.md` — approved summaries only, never
-raw transcripts.
+Capture the author's dictation verbatim in
+`content-work/<ID>/interview-transcript-raw.md` — exactly as spoken, in the
+language it was spoken, with repetitions and half sentences preserved
+as-is; the transcript is private and never published. Distill each round
+into its approved summary in `content-work/<ID>/interview-notes.md` —
+approved summaries only, never raw transcripts.
 
 ## Phase 3 — Interview the emotional reality
 

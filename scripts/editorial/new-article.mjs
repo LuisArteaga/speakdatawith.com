@@ -2,7 +2,7 @@
 /**
  * editorial:new — the deterministic bootstrap for a new article (issue #29,
  * ADR-0003). It allocates the next free editorial ID and scaffolds the
- * eleven private working artifacts under `content-work/<ID>/`; everything
+ * thirteen private working artifacts under `content-work/<ID>/`; everything
  * else in the editorial workflow is prompt plus templates. The script
  * enforces no gates and validates no checkbox states — the gates are human
  * confirmations (docs/editorial/workflow.md).
@@ -43,15 +43,17 @@ const ARTICLE_EXTENSION_PATTERN = /\.(md|mdx)$/;
 const ID_PREFIX = 'SDW-';
 
 /**
- * The eleven working artifacts of the editorial lifecycle, in scaffold
+ * The thirteen working artifacts of the editorial lifecycle, in scaffold
  * order. Titles and purposes mirror docs/editorial/workflow.md verbatim
  * ("Working artifacts" table) — the editorial skill's templates
- * (.claude/skills/editorial/, separate issue) must stay consistent with
+ * (.claude/skills/editorial/templates/) must stay consistent with
  * these headers.
  */
 export const ARTIFACT_FILES = [
+  { file: 'status.md', title: 'Status', purpose: 'Machine-readable session-resume state: current phase, confirmed gates, open questions, next entry point.' },
   { file: 'topic.md', title: 'Topic', purpose: 'Provisional problem, open ambiguities, intended reader.' },
   { file: 'interview-notes.md', title: 'Interview Notes', purpose: 'Approved round summaries of the experience and humanity interviews.' },
+  { file: 'interview-transcript-raw.md', title: 'Interview Transcript (Raw)', purpose: 'Verbatim dictated interview material; feeds drafting, the humanity pass, and the claims audit.' },
   { file: 'author-language-bank.md', title: 'Author Language Bank', purpose: "The author's actual wording, recovered verbatim." },
   { file: 'thesis-map.md', title: 'Thesis Map', purpose: 'Decision, primary reader, trigger, current thesis, conventional assumption, failure mechanism, confidence.' },
   { file: 'gap-analysis.md', title: 'Gap Analysis', purpose: 'Every claim classified: observed, reproducible, externally verifiable, interpretive, unknown, or private.' },
@@ -161,7 +163,7 @@ export function allocateEditorialId({ workDir, articlesDir }) {
 }
 
 /**
- * The scaffold contents for one article: the eleven artifact files with
+ * The scaffold contents for one article: the thirteen artifact files with
  * their standard headers (title, editorial ID, privacy note, purpose from
  * docs/editorial/workflow.md); `topic.md` additionally records the topic.
  * Pure — returns the files, writes nothing.
