@@ -16,3 +16,6 @@ translation-work/*
 # directory marker itself is committed.
 content-work/*
 !content-work/.gitkeep
+
+# Machine-local working memory for site tooling; never committed.
+.deepagents/
